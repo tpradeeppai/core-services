@@ -203,14 +203,8 @@ public class LegacyIndexService {
 							} else {
 								List<Object> searchResponse = JsonPath.read(response,
 										legacyIndexRequest.getApiDetails().getResponseJsonPath());
-								if(searchResponse.size() < size) {
-									for(long i = 0; i < 10000000; i++) {i = i;}
-									log.info("Retrying Offset: "+offset+" and Size: "+size);
-									response = restTemplate.postForObject(uri, request, Map.class);
-									searchResponse = JsonPath.read(response,
-											legacyIndexRequest.getApiDetails().getResponseJsonPath());
-								}
 								if (!CollectionUtils.isEmpty(searchResponse)) {
+
 									childThreadExecutor(legacyIndexRequest, mapper, response);
 									presentCount = searchResponse.size();
 									count += size;
@@ -292,13 +286,16 @@ public class LegacyIndexService {
 		final Runnable childThreadJob = new Runnable() {
 			boolean threadRun = true;
 			public void run() {
-				if (threadRun) {									
+				if (threadRun) {
+					String hh="";
 					try {
+
 					if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {
 						ServiceResponse serviceResponse = mapper.readValue(mapper.writeValueAsString(response),
 								ServiceResponse.class);
 						PGRIndexObject indexObject = pgrCustomDecorator.dataTransformationForPGR(serviceResponse);
-						indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), indexObject);
+						if(!CollectionUtils.isEmpty(indexObject.getServiceRequests()))
+							indexerProducer.producer(legacyIndexRequest.getLegacyIndexTopic(), indexObject);
 					} else {
 						if(legacyIndexRequest.getLegacyIndexTopic().equals(ptLegacyTopic)) {
 							PropertyResponse propertyResponse = mapper.readValue(mapper.writeValueAsString(response), PropertyResponse.class);
@@ -309,6 +306,7 @@ public class LegacyIndexService {
 						}
 					}
 				} catch (Exception e) {
+						log.error("Child thread Exception: ", e);
 					threadRun = false;
 				}
 				threadRun = false;

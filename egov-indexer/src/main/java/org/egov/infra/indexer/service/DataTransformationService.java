@@ -191,7 +191,6 @@ public class DataTransformationService {
 					log.error("Exception while trying to hit: " + uri);
 					continue;
 				}
-				log.debug("Response: " + response + " from the URI: " + uriMapping.getPath());
 				for (FieldMapping fieldMapping : uriMapping.getUriResponseMapping()) {
 					String[] expressionArray = (fieldMapping.getOutJsonPath()).split("[.]");
 					String expression = indexerUtils.getProcessedJsonPath(fieldMapping.getOutJsonPath());
@@ -199,8 +198,8 @@ public class DataTransformationService {
 						Object value = JsonPath.read(mapper.writeValueAsString(response), fieldMapping.getInjsonpath());
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], value);
 					} catch (Exception e) {
+						log.error("Response: " + response + " from the URI: " + uriMapping.getPath());
 						log.error("Value: " + fieldMapping.getInjsonpath() + " is not found!");
-						log.debug("URI: " + uri);
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], null);
 						continue;
 					}
@@ -252,7 +251,7 @@ public class DataTransformationService {
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], value);
 					} catch (Exception e) {
 						log.error("Value: " + fieldMapping.getInjsonpath() + " is not found!");
-						log.debug("MDMS Request: " + request);
+						log.debug("MDMS Response: " + response);
 						documentContext.put(expression, expressionArray[expressionArray.length - 1], null);
 						continue;
 					}

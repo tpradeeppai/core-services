@@ -1,5 +1,6 @@
 package org.egov.infra.indexer.util;
 
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -217,19 +218,25 @@ public class IndexerUtils {
 			UriMapping mdmsMppings) {
 		if (uri.toString().length() < 1)
 			uri.append(mdmsHost).append(mdmsEndpoint);
-		String filter = buildFilter(mdmsMppings.getFilter(), mdmsMppings, kafkaJson);
-		MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name(mdmsMppings.getMasterName())
-				.filter(filter).build();
-		List<MasterDetail> masterDetails = new ArrayList<>();
-		masterDetails.add(masterDetail);
-		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(mdmsMppings.getModuleName())
-				.masterDetails(masterDetails).build();
-		List<ModuleDetail> moduleDetails = new ArrayList<>();
-		moduleDetails.add(moduleDetail);
-		MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(mdmsMppings.getTenantId())
-				.moduleDetails(moduleDetails).build();
+		try {
+			String filter = buildFilter(mdmsMppings.getFilter(), mdmsMppings, kafkaJson);
+			MasterDetail masterDetail = org.egov.mdms.model.MasterDetail.builder().name(mdmsMppings.getMasterName())
+					.filter(filter).build();
+			List<MasterDetail> masterDetails = new ArrayList<>();
+			masterDetails.add(masterDetail);
+			ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(mdmsMppings.getModuleName())
+					.masterDetails(masterDetails).build();
+			List<ModuleDetail> moduleDetails = new ArrayList<>();
+			moduleDetails.add(moduleDetail);
+			MdmsCriteria mdmsCriteria = MdmsCriteria.builder().tenantId(mdmsMppings.getTenantId())
+					.moduleDetails(moduleDetails).build();
 
-		return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+			return MdmsCriteriaReq.builder().requestInfo(requestInfo).mdmsCriteria(mdmsCriteria).build();
+		}catch(Exception e) {
+			log.error("Exception while builing MDMSReq: ",e);
+			return null;
+		}
+
 	}
 
 	/**
@@ -242,7 +249,6 @@ public class IndexerUtils {
 	 */
 	public String buildFilter(String filter, UriMapping mdmsMppings, String kafkaJson) {
 		String modifiedFilter = mdmsMppings.getFilter();
-		log.debug("buildfilter, kafkaJson: " + kafkaJson);
 		for (FilterMapping mdmsMapping : mdmsMppings.getFilterMapping()) {
 			Object value = JsonPath.read(kafkaJson, mdmsMapping.getValueJsonpath());
 			if (null == value) {
@@ -493,17 +499,34 @@ public class IndexerUtils {
 			ObjectMapper mapper = getObjectMapper();
 			String epochValue = mapper
 					.writeValueAsString(JsonPath.read(context.jsonString().toString(), index.getTimeStampField()));
-			Date date = new Date(Long.valueOf(epochValue));
+			if(null == epochValue) {
+				log.info("NULL found in place of timestamp field.");
+				return context;
+			}
+			Date date = new Date(Long.valueOf(convertEpochToLong(epochValue)));
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US);
 			formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
 			context.put("$", "@timestamp", formatter.format(date));
 		} catch (Exception e) {
 			log.info("Exception while adding timestamp!");
-			log.debug("Data: " + context.jsonString());
+			log.info("Time stamp field: "+index.getTimeStampField());
 		}
-
+		
 		return context;
 
+	}
+
+	/**
+	 * Method to convert double with scientific precision to plain long
+	 * ex:- 1.5534533434E10-->15534533434
+	 *
+	 * @param value
+	 * @return
+	 */
+	public String convertEpochToLong(String value){
+		DecimalFormat df = new DecimalFormat("#");
+		df.setMaximumFractionDigits(0);
+		return df.format(Double.valueOf(value));
 	}
 	
 	/**
