@@ -287,7 +287,6 @@ public class LegacyIndexService {
 			boolean threadRun = true;
 			public void run() {
 				if (threadRun) {
-					String hh="";
 					try {
 
 					if (legacyIndexRequest.getLegacyIndexTopic().equals(pgrLegacyTopic)) {
