@@ -56,7 +56,6 @@ public class ReportController {
 			return reportService.getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),
 					metaDataRequest.getTenantId());
 		} catch (Exception e) {
-			e.printStackTrace();
 			return reportService.getFailureResponse(metaDataRequest.getRequestInfo(), metaDataRequest.getTenantId());
 		}
 	}
@@ -70,7 +69,6 @@ public class ReportController {
 					reportRequest.getReportName(), reportRequest.getRequestInfo().getAuthToken());
 			return new ResponseEntity<>(reportResponse, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(), reportRequest.getTenantId());
 		}
 	}
@@ -84,7 +82,6 @@ public class ReportController {
 					reportRequest.getReportName(), reportRequest.getRequestInfo().getAuthToken());
 			return new ResponseEntity<>(reportResponse.getReportData().size(), HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(), reportRequest.getTenantId());
 		}
 	}
@@ -115,7 +112,6 @@ public class ReportController {
 			return reportService.getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),
 					metaDataRequest.getTenantId());
 		} catch (Exception e) {
-			e.printStackTrace();
 			return reportService.getFailureResponse(metaDataRequest.getRequestInfo(), metaDataRequest.getTenantId());
 		}
 	}
@@ -130,7 +126,6 @@ public class ReportController {
 			return reportService.getReportDataSuccessResponse(reportResponse, reportRequest.getRequestInfo(),
 					reportRequest.getTenantId());
 		} catch (Exception e) {
-			e.printStackTrace();
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(), reportRequest.getTenantId());
 		}
 	}
@@ -143,7 +138,6 @@ public class ReportController {
 
 			ReportApp.loadYaml(moduleName);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(), reportRequest.getTenantId(), e);
 		}
 		return reportService.reloadResponse(reportRequest.getRequestInfo(), null);
@@ -153,7 +147,7 @@ public class ReportController {
 	
 	@PostMapping("/{moduleName}/{reportName}/metadata/_get")
 	@ResponseBody
-	public ResponseEntity<?> getMetaData(@PathVariable("moduleName") String moduleName,
+	public ResponseEntity<?> getMetaDataV2(@PathVariable("moduleName") String moduleName,
 			@PathVariable("reportName") String reportName, @RequestBody @Valid final MetaDataRequest metaDataRequest,
 			final BindingResult errors) {
 		try {
@@ -162,14 +156,13 @@ public class ReportController {
 			return reportService.getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),
 					metaDataRequest.getTenantId());
 		} catch (Exception e) {
-			e.printStackTrace();
 			return reportService.getFailureResponse(metaDataRequest.getRequestInfo(), metaDataRequest.getTenantId());
 		}
 	}
 
 	@PostMapping("/{moduleName}/{reportName}/_get")
 	@ResponseBody
-	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,
+	public ResponseEntity<?> getReportDataV2(@PathVariable("moduleName") String moduleName,
 			@PathVariable("reportName") String reportName, @RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
 		try {
@@ -178,14 +171,13 @@ public class ReportController {
 					reportRequest.getReportName(), reportRequest.getRequestInfo().getAuthToken());
 			return new ResponseEntity<>(reportResponse, HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(), reportRequest.getTenantId());
 		}
 	}
 
 	@PostMapping("/{moduleName}/{reportName}/total/_get")
 	@ResponseBody
-	public ResponseEntity<?> getReportDataTotal(@PathVariable("moduleName") String moduleName,
+	public ResponseEntity<?> getReportDataTotalV2(@PathVariable("moduleName") String moduleName,
 			@PathVariable("reportName") String reportName, @RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
 		try {
@@ -194,7 +186,6 @@ public class ReportController {
 					reportRequest.getReportName(), reportRequest.getRequestInfo().getAuthToken());
 			return new ResponseEntity<>(reportResponse.getReportData().size(), HttpStatus.OK);
 		} catch (Exception e) {
-			e.printStackTrace();
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(), reportRequest.getTenantId());
 		}
 	}
