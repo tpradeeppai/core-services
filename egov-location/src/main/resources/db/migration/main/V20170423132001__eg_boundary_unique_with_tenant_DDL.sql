@@ -26,7 +26,7 @@ alter table eg_boundary_type drop constraint bndry_type_parent;
 
 
 
- alter table eg_boundary_type add constraint  eg_boundary_type_pkey primary key(id,tenantid);
+alter table eg_boundary_type add constraint  eg_boundary_type_pkey primary key(id,tenantid);
 
 alter table eg_hierarchy_type   drop constraint eg_heirarchy_type_type_code_key;
 alter table eg_hierarchy_type   drop constraint eg_hierarchytype_code_tenant_uk;
