@@ -33,7 +33,7 @@ public class WaterDaoImpl implements WaterDao {
 
 	@Override
 	public void saveWaterConnection(WaterConnectionRequest waterConnectionRequest) {
-		waterConnectionProducer.push("shriya", waterConnectionRequest);
+		waterConnectionProducer.push("${egov.waterservice.createWaterConnection}", waterConnectionRequest);
 	}
 
 	@Override
@@ -44,6 +44,11 @@ public class WaterDaoImpl implements WaterDao {
 		log.info("Query: " + query);
 		waterConnectionList = jdbcTemplate.query(query, preparedStatement.toArray(), waterRowMapper);
 		return waterConnectionList;
+	}
+	
+	@Override
+	public void updateWaterConnection(WaterConnectionRequest waterConnectionRequest) {
+		waterConnectionProducer.push("${egov.waterservice.updateWaterConnection}", waterConnectionRequest);
 	}
 
 }

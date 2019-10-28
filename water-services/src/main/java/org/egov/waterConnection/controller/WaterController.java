@@ -61,5 +61,17 @@ public class WaterController {
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
+	@RequestMapping(value = "/_update", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<WaterConnectionResponse> updateWaterConnection(
+			@Valid @RequestBody WaterConnectionRequest waterConnectionRequest) {
+		List<WaterConnection> waterConnection = waterService.updateWaterConnection(waterConnectionRequest);
+		WaterConnectionResponse response = WaterConnectionResponse.builder().waterConnection(waterConnection)
+				.responseInfo(responseInfoFactory
+						.createResponseInfoFromRequestInfo(waterConnectionRequest.getRequestInfo(), true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
+	}
 
 }
