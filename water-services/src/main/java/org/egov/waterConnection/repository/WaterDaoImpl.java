@@ -37,7 +37,7 @@ public class WaterDaoImpl implements WaterDao {
 	}
 
 	@Override
-	public List<WaterConnection> getWaterConnectionList(WaterConnectionSearchCriteria criteria,RequestInfo requestInfo) {
+	public List<WaterConnection> getWaterConnectionList(WaterConnectionSearchCriteria criteria, RequestInfo requestInfo) {
 		List<WaterConnection> waterConnectionList = new ArrayList<>();
 		List<Object> preparedStatement = new ArrayList<>();
 		String query = wCQueryBuilder.getSearchQueryString(criteria, preparedStatement,requestInfo);

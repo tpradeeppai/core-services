@@ -1,22 +1,16 @@
 package org.egov.waterConnection.service;
 
-import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.waterConnection.model.Property;
-//import org.egov.tl.web.models.TradeLicense;
-//import org.egov.tl.web.models.TradeLicenseSearchCriteria;
-//import org.egov.tl.web.models.user.UserDetailResponse;
-import org.egov.waterConnection.model.PropertyResponse;
 import org.egov.waterConnection.model.WaterConnection;
 import org.egov.waterConnection.model.WaterConnectionRequest;
 import org.egov.waterConnection.model.WaterConnectionSearchCriteria;
 import org.egov.waterConnection.repository.WaterDao;
-import org.egov.waterConnection.repository.builder.WCQueryBuilder;
 import org.egov.waterConnection.util.WaterServicesUtil;
 import org.egov.waterConnection.validator.ValidateProperty;
 import org.egov.waterConnection.validator.WaterConnectionValidator;
@@ -74,6 +68,7 @@ public class WaterServiceImpl implements WaterService {
 	@Override
 	public List<WaterConnection> updateWaterConnection(WaterConnectionRequest waterConnectionRequest) {
 		waterConnectionValidator.validateWaterConnection(waterConnectionRequest, true);
+		validateProperty.validatePropertyCriteria(waterConnectionRequest);
 		validateProperty.validatePropertyCriteria(waterConnectionRequest);
 		waterDao.updateWaterConnection(waterConnectionRequest);
 		return Arrays.asList(waterConnectionRequest.getWaterConnection());
