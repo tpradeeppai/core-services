@@ -13,5 +13,7 @@ public interface WaterService {
 	public List<WaterConnection> createWaterConnection(WaterConnectionRequest waterConnectionRequest);
 
 	public List<WaterConnection> search(WaterConnectionSearchCriteria criteria, RequestInfo requestInfo);
+	
+	public List<WaterConnection> updateWaterConnection(WaterConnectionRequest waterConnectionRequest);
 
 }

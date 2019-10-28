@@ -63,6 +63,7 @@ public class WaterController {
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 	
+<<<<<<< HEAD
 //	@RequestMapping(value = "/_cancel", method = RequestMethod.POST)
 //	public ResponseEntity<WaterConnectionResponse> cancel(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
 //												   @Valid @ModelAttribute WaterConnectionCancelCriteria waterConnectionCancelCriteria) {
@@ -73,5 +74,18 @@ public class WaterController {
 //				.build();
 //		return new ResponseEntity<>(response, HttpStatus.OK);
 //	}
+=======
+	@RequestMapping(value = "/_update", method = RequestMethod.POST, produces = "application/json")
+	public ResponseEntity<WaterConnectionResponse> updateWaterConnection(
+			@Valid @RequestBody WaterConnectionRequest waterConnectionRequest) {
+		List<WaterConnection> waterConnection = waterService.updateWaterConnection(waterConnectionRequest);
+		WaterConnectionResponse response = WaterConnectionResponse.builder().waterConnection(waterConnection)
+				.responseInfo(responseInfoFactory
+						.createResponseInfoFromRequestInfo(waterConnectionRequest.getRequestInfo(), true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+
+	}
+>>>>>>> ca455fc6baa3696b2cd45aa1767dae6cb8b7af17
 
 }

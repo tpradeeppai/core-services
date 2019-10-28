@@ -18,6 +18,7 @@ import org.egov.waterConnection.model.WaterConnectionSearchCriteria;
 import org.egov.waterConnection.repository.WaterDao;
 import org.egov.waterConnection.repository.builder.WCQueryBuilder;
 import org.egov.waterConnection.util.WaterServicesUtil;
+import org.egov.waterConnection.validator.ValidateProperty;
 import org.egov.waterConnection.validator.WaterConnectionValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,6 +38,9 @@ public class WaterServiceImpl implements WaterService {
 
 	@Autowired
 	WaterConnectionValidator waterConnectionValidator;
+	
+	@Autowired
+	ValidateProperty validateProperty;
 
 	@Override
 	public List<WaterConnection> createWaterConnection(WaterConnectionRequest waterConnectionRequest) {
@@ -67,4 +71,11 @@ public class WaterServiceImpl implements WaterService {
 		return waterConnectionList;
 	}
 
+	@Override
+	public List<WaterConnection> updateWaterConnection(WaterConnectionRequest waterConnectionRequest) {
+		waterConnectionValidator.validateWaterConnection(waterConnectionRequest, true);
+		validateProperty.validatePropertyCriteria(waterConnectionRequest);
+		waterDao.updateWaterConnection(waterConnectionRequest);
+		return Arrays.asList(waterConnectionRequest.getWaterConnection());
+	}
 }
