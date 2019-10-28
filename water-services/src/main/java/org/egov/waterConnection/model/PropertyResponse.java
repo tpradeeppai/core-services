@@ -18,7 +18,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Contract class to send response. Array of Property items  are used in case of search results or response for create. Where as single Property item is used for update
+ * Contract class to send response. Array of Property items are used in case of
+ * search results or response for create. Where as single Property item is used
+ * for update
  */
 @ApiModel(description = "Contract class to send response. Array of Property items  are used in case of search results or response for create. Where as single Property item is used for update")
 @Validated
@@ -29,22 +31,20 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PropertyResponse   {
-        @JsonProperty("ResponseInfo")
-        private ResponseInfo responseInfo;
+public class PropertyResponse {
+	@JsonProperty("ResponseInfo")
+	private ResponseInfo responseInfo;
 
-        @JsonProperty("Properties")
-        @Valid
-        private List<Property> properties;
+	@JsonProperty("Properties")
+	@Valid
+	private List<Property> properties;
 
-
-        public PropertyResponse addPropertiesItem(Property propertiesItem) {
-            if (this.properties == null) {
-            this.properties = new ArrayList<>();
-            }
-        this.properties.add(propertiesItem);
-        return this;
-        }
+	public PropertyResponse addPropertiesItem(Property propertiesItem) {
+		if (this.properties == null) {
+			this.properties = new ArrayList<>();
+		}
+		this.properties.add(propertiesItem);
+		return this;
+	}
 
 }
-

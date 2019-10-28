@@ -15,311 +15,330 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * This is lightweight property object that can be used as reference by definitions needing property linking. Actual Property Object extends this to include more elaborate attributes of the property.
+ * This is lightweight property object that can be used as reference by
+ * definitions needing property linking. Actual Property Object extends this to
+ * include more elaborate attributes of the property.
  */
 @ApiModel(description = "This is lightweight property object that can be used as reference by definitions needing property linking. Actual Property Object extends this to include more elaborate attributes of the property.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-10-24T10:29:25.253+05:30[Asia/Kolkata]")
-public class Connection   {
-  @JsonProperty("id")
-  private String id = null;
+public class Connection {
+	@JsonProperty("id")
+	private String id = null;
 
-  @JsonProperty("property")
-  private Property property = null;
+	@JsonProperty("property")
+	private Property property = null;
 
-  @JsonProperty("applicationNo")
-  private String applicationNo = null;
+	@JsonProperty("applicationNo")
+	private String applicationNo = null;
 
-  /**
-   * Gets or Sets applicationStatus
-   */
-  public enum ApplicationStatusEnum {
-    REJECTED("Rejected"),
-    
-    APPROVED("Approved"),
-    
-    CANCELED("Canceled"),
-    
-    INPROGRESS("InProgress");
+	/**
+	 * Gets or Sets applicationStatus
+	 */
+	public enum ApplicationStatusEnum {
+		REJECTED("Rejected"),
 
-    private String value;
+		APPROVED("Approved"),
 
-    ApplicationStatusEnum(String value) {
-      this.value = value;
-    }
+		CANCELED("Canceled"),
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		INPROGRESS("InProgress");
 
-    @JsonCreator
-    public static ApplicationStatusEnum fromValue(String text) {
-      for (ApplicationStatusEnum b : ApplicationStatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-  @JsonProperty("applicationStatus")
-  private ApplicationStatusEnum applicationStatus = null;
+		private String value;
 
-  /**
-   * Gets or Sets status
-   */
-  public enum StatusEnum {
-    ACTIVE("Active"),
-    
-    INACTIVE("Inactive");
+		ApplicationStatusEnum(String value) {
+			this.value = value;
+		}
 
-    private String value;
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-    StatusEnum(String value) {
-      this.value = value;
-    }
+		@JsonCreator
+		public static ApplicationStatusEnum fromValue(String text) {
+			for (ApplicationStatusEnum b : ApplicationStatusEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+	@JsonProperty("applicationStatus")
+	private ApplicationStatusEnum applicationStatus = null;
 
-    @JsonCreator
-    public static StatusEnum fromValue(String text) {
-      for (StatusEnum b : StatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-  @JsonProperty("status")
-  private StatusEnum status = null;
+	/**
+	 * Gets or Sets status
+	 */
+	public enum StatusEnum {
+		ACTIVE("Active"),
 
-  @JsonProperty("connectionNo")
-  private String connectionNo = null;
+		INACTIVE("Inactive");
 
-  @JsonProperty("oldConnectionNo")
-  private String oldConnectionNo = null;
+		private String value;
 
-  @JsonProperty("documents")
-  private List<Document> documents = null;
+		StatusEnum(String value) {
+			this.value = value;
+		}
 
-  public Connection id(String id) {
-    this.id = id;
-    return this;
-  }
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  /**
-   * Unique Identifier of the connection for internal reference.
-   * @return id
-  **/
-  @ApiModelProperty(readOnly = true, value = "Unique Identifier of the connection for internal reference.")
+		@JsonCreator
+		public static StatusEnum fromValue(String text) {
+			for (StatusEnum b : StatusEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-@Size(min=1,max=64)   public String getId() {
-    return id;
-  }
+	@JsonProperty("status")
+	private StatusEnum status = null;
 
-  public void setId(String id) {
-    this.id = id;
-  }
+	@JsonProperty("connectionNo")
+	private String connectionNo = null;
 
-  public Connection property(Property property) {
-    this.property = property;
-    return this;
-  }
+	@JsonProperty("oldConnectionNo")
+	private String oldConnectionNo = null;
 
-  /**
-   * Get property
-   * @return property
-  **/
-  @ApiModelProperty(value = "")
+	@JsonProperty("documents")
+	private List<Document> documents = null;
 
-  @Valid
-  public Property getProperty() {
-    return property;
-  }
+	public Connection id(String id) {
+		this.id = id;
+		return this;
+	}
 
-  public void setProperty(Property property) {
-    this.property = property;
-  }
+	/**
+	 * Unique Identifier of the connection for internal reference.
+	 * 
+	 * @return id
+	 **/
+	@ApiModelProperty(readOnly = true, value = "Unique Identifier of the connection for internal reference.")
 
-  public Connection applicationNo(String applicationNo) {
-    this.applicationNo = applicationNo;
-    return this;
-  }
+	@Size(min = 1, max = 64)
+	public String getId() {
+		return id;
+	}
 
-  /**
-   * Formatted application number, which will be generated using ID-Gen at the time .
-   * @return applicationNo
-  **/
-  @ApiModelProperty(readOnly = true, value = "Formatted application number, which will be generated using ID-Gen at the time .")
+	public void setId(String id) {
+		this.id = id;
+	}
 
-@Size(min=1,max=64)   public String getApplicationNo() {
-    return applicationNo;
-  }
+	public Connection property(Property property) {
+		this.property = property;
+		return this;
+	}
 
-  public void setApplicationNo(String applicationNo) {
-    this.applicationNo = applicationNo;
-  }
+	/**
+	 * Get property
+	 * 
+	 * @return property
+	 **/
+	@ApiModelProperty(value = "")
 
-  public Connection applicationStatus(ApplicationStatusEnum applicationStatus) {
-    this.applicationStatus = applicationStatus;
-    return this;
-  }
+	@Valid
+	public Property getProperty() {
+		return property;
+	}
 
-  /**
-   * Get applicationStatus
-   * @return applicationStatus
-  **/
-  @ApiModelProperty(value = "")
+	public void setProperty(Property property) {
+		this.property = property;
+	}
 
-  public ApplicationStatusEnum getApplicationStatus() {
-    return applicationStatus;
-  }
+	public Connection applicationNo(String applicationNo) {
+		this.applicationNo = applicationNo;
+		return this;
+	}
 
-  public void setApplicationStatus(ApplicationStatusEnum applicationStatus) {
-    this.applicationStatus = applicationStatus;
-  }
+	/**
+	 * Formatted application number, which will be generated using ID-Gen at the
+	 * time .
+	 * 
+	 * @return applicationNo
+	 **/
+	@ApiModelProperty(readOnly = true, value = "Formatted application number, which will be generated using ID-Gen at the time .")
 
-  public Connection status(StatusEnum status) {
-    this.status = status;
-    return this;
-  }
+	@Size(min = 1, max = 64)
+	public String getApplicationNo() {
+		return applicationNo;
+	}
 
-  /**
-   * Get status
-   * @return status
-  **/
-  @ApiModelProperty(value = "")
+	public void setApplicationNo(String applicationNo) {
+		this.applicationNo = applicationNo;
+	}
 
-  public StatusEnum getStatus() {
-    return status;
-  }
+	public Connection applicationStatus(ApplicationStatusEnum applicationStatus) {
+		this.applicationStatus = applicationStatus;
+		return this;
+	}
 
-  public void setStatus(StatusEnum status) {
-    this.status = status;
-  }
+	/**
+	 * Get applicationStatus
+	 * 
+	 * @return applicationStatus
+	 **/
+	@ApiModelProperty(value = "")
 
-  public Connection connectionNo(String connectionNo) {
-    this.connectionNo = connectionNo;
-    return this;
-  }
+	public ApplicationStatusEnum getApplicationStatus() {
+		return applicationStatus;
+	}
 
-  /**
-   * Formatted connection number, which will be generated using ID-Gen service after aproval of connection application in case of new application. If the source of data is \"DATA_ENTRY\" then application status will be considered as \"APROVED\" application.
-   * @return connectionNo
-  **/
-  @ApiModelProperty(readOnly = true, value = "Formatted connection number, which will be generated using ID-Gen service after aproval of connection application in case of new application. If the source of data is \"DATA_ENTRY\" then application status will be considered as \"APROVED\" application.")
+	public void setApplicationStatus(ApplicationStatusEnum applicationStatus) {
+		this.applicationStatus = applicationStatus;
+	}
 
-@Size(min=1,max=64)   public String getConnectionNo() {
-    return connectionNo;
-  }
+	public Connection status(StatusEnum status) {
+		this.status = status;
+		return this;
+	}
 
-  public void setConnectionNo(String connectionNo) {
-    this.connectionNo = connectionNo;
-  }
+	/**
+	 * Get status
+	 * 
+	 * @return status
+	 **/
+	@ApiModelProperty(value = "")
 
-  public Connection oldConnectionNo(String oldConnectionNo) {
-    this.oldConnectionNo = oldConnectionNo;
-    return this;
-  }
+	public StatusEnum getStatus() {
+		return status;
+	}
 
-  /**
-   * Mandatory if source is \"DATA_ENTRY\".
-   * @return oldConnectionNo
-  **/
-  @ApiModelProperty(readOnly = true, value = "Mandatory if source is \"DATA_ENTRY\".")
+	public void setStatus(StatusEnum status) {
+		this.status = status;
+	}
 
-@Size(min=1,max=64)   public String getOldConnectionNo() {
-    return oldConnectionNo;
-  }
+	public Connection connectionNo(String connectionNo) {
+		this.connectionNo = connectionNo;
+		return this;
+	}
 
-  public void setOldConnectionNo(String oldConnectionNo) {
-    this.oldConnectionNo = oldConnectionNo;
-  }
+	/**
+	 * Formatted connection number, which will be generated using ID-Gen service
+	 * after aproval of connection application in case of new application. If
+	 * the source of data is \"DATA_ENTRY\" then application status will be
+	 * considered as \"APROVED\" application.
+	 * 
+	 * @return connectionNo
+	 **/
+	@ApiModelProperty(readOnly = true, value = "Formatted connection number, which will be generated using ID-Gen service after aproval of connection application in case of new application. If the source of data is \"DATA_ENTRY\" then application status will be considered as \"APROVED\" application.")
 
-  public Connection documents(List<Document> documents) {
-    this.documents = documents;
-    return this;
-  }
+	@Size(min = 1, max = 64)
+	public String getConnectionNo() {
+		return connectionNo;
+	}
 
-  public Connection addDocumentsItem(Document documentsItem) {
-    if (this.documents == null) {
-      this.documents = new ArrayList<Document>();
-    }
-    this.documents.add(documentsItem);
-    return this;
-  }
+	public void setConnectionNo(String connectionNo) {
+		this.connectionNo = connectionNo;
+	}
 
-  /**
-   * The documents attached by owner for exemption.
-   * @return documents
-  **/
-  @ApiModelProperty(value = "The documents attached by owner for exemption.")
-  @Valid
-  public List<Document> getDocuments() {
-    return documents;
-  }
+	public Connection oldConnectionNo(String oldConnectionNo) {
+		this.oldConnectionNo = oldConnectionNo;
+		return this;
+	}
 
-  public void setDocuments(List<Document> documents) {
-    this.documents = documents;
-  }
+	/**
+	 * Mandatory if source is \"DATA_ENTRY\".
+	 * 
+	 * @return oldConnectionNo
+	 **/
+	@ApiModelProperty(readOnly = true, value = "Mandatory if source is \"DATA_ENTRY\".")
 
+	@Size(min = 1, max = 64)
+	public String getOldConnectionNo() {
+		return oldConnectionNo;
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Connection connection = (Connection) o;
-    return Objects.equals(this.id, connection.id) &&
-        Objects.equals(this.property, connection.property) &&
-        Objects.equals(this.applicationNo, connection.applicationNo) &&
-        Objects.equals(this.applicationStatus, connection.applicationStatus) &&
-        Objects.equals(this.status, connection.status) &&
-        Objects.equals(this.connectionNo, connection.connectionNo) &&
-        Objects.equals(this.oldConnectionNo, connection.oldConnectionNo) &&
-        Objects.equals(this.documents, connection.documents);
-  }
+	public void setOldConnectionNo(String oldConnectionNo) {
+		this.oldConnectionNo = oldConnectionNo;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, property, applicationNo, applicationStatus, status, connectionNo, oldConnectionNo, documents);
-  }
+	public Connection documents(List<Document> documents) {
+		this.documents = documents;
+		return this;
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class Connection {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    property: ").append(toIndentedString(property)).append("\n");
-    sb.append("    applicationNo: ").append(toIndentedString(applicationNo)).append("\n");
-    sb.append("    applicationStatus: ").append(toIndentedString(applicationStatus)).append("\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
-    sb.append("    connectionNo: ").append(toIndentedString(connectionNo)).append("\n");
-    sb.append("    oldConnectionNo: ").append(toIndentedString(oldConnectionNo)).append("\n");
-    sb.append("    documents: ").append(toIndentedString(documents)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	public Connection addDocumentsItem(Document documentsItem) {
+		if (this.documents == null) {
+			this.documents = new ArrayList<Document>();
+		}
+		this.documents.add(documentsItem);
+		return this;
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * The documents attached by owner for exemption.
+	 * 
+	 * @return documents
+	 **/
+	@ApiModelProperty(value = "The documents attached by owner for exemption.")
+	@Valid
+	public List<Document> getDocuments() {
+		return documents;
+	}
+
+	public void setDocuments(List<Document> documents) {
+		this.documents = documents;
+	}
+
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Connection connection = (Connection) o;
+		return Objects.equals(this.id, connection.id) && Objects.equals(this.property, connection.property)
+				&& Objects.equals(this.applicationNo, connection.applicationNo)
+				&& Objects.equals(this.applicationStatus, connection.applicationStatus)
+				&& Objects.equals(this.status, connection.status)
+				&& Objects.equals(this.connectionNo, connection.connectionNo)
+				&& Objects.equals(this.oldConnectionNo, connection.oldConnectionNo)
+				&& Objects.equals(this.documents, connection.documents);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, property, applicationNo, applicationStatus, status, connectionNo, oldConnectionNo,
+				documents);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class Connection {\n");
+
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
+		sb.append("    property: ").append(toIndentedString(property)).append("\n");
+		sb.append("    applicationNo: ").append(toIndentedString(applicationNo)).append("\n");
+		sb.append("    applicationStatus: ").append(toIndentedString(applicationStatus)).append("\n");
+		sb.append("    status: ").append(toIndentedString(status)).append("\n");
+		sb.append("    connectionNo: ").append(toIndentedString(connectionNo)).append("\n");
+		sb.append("    oldConnectionNo: ").append(toIndentedString(oldConnectionNo)).append("\n");
+		sb.append("    documents: ").append(toIndentedString(documents)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

@@ -40,11 +40,8 @@ public class WaterServiceImpl implements WaterService {
 
 	@Override
 	public List<WaterConnection> createWaterConnection(WaterConnectionRequest waterConnectionRequest) {
-		// waterConnectionValidator.validateCreateRequest(waterConnectionRequest);
-		// PropertyResponse propertyData = (PropertyResponse)
-
 		enrichWaterConnection(waterConnectionRequest);
-        waterDao.saveWaterConnection(waterConnectionRequest);
+		waterDao.saveWaterConnection(waterConnectionRequest);
 		return Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
 
@@ -56,17 +53,15 @@ public class WaterServiceImpl implements WaterService {
 
 	public List<WaterConnection> search(WaterConnectionSearchCriteria criteria, RequestInfo requestInfo) {
 		List<WaterConnection> waterConnectionList;
-		
-		List<Property> propertyList = waterServicesUtil.propertyCallForSearchCriteria(criteria,requestInfo);
 
-		waterConnectionList = getWaterConnectionsList(criteria, requestInfo);
-		
-		return waterConnectionList;
+		List<Property> propertyList = waterServicesUtil.propertyCallForSearchCriteria(criteria, requestInfo);
+        waterConnectionList = getWaterConnectionsList(criteria, requestInfo);
+        return waterConnectionList;
 	}
 
 	public List<WaterConnection> getWaterConnectionsList(WaterConnectionSearchCriteria criteria,
 			RequestInfo requestInfo) {
-		List<WaterConnection> waterConnectionList = waterDao.getWaterConnectionList(criteria);
+		List<WaterConnection> waterConnectionList = waterDao.getWaterConnectionList(criteria,requestInfo);
 		if (waterConnectionList.isEmpty())
 			return Collections.emptyList();
 		return waterConnectionList;

@@ -38,7 +38,7 @@ public class PropertyCriteria {
 	private String userName;
 
 	private String mobileNumber;
-	
+
 	private StatusEnum propertyDetailStatus;
 
 	private String name;
@@ -50,20 +50,17 @@ public class PropertyCriteria {
 	private String accountId;
 
 	private List<PropertyInfo.StatusEnum> statuses;
-	
-    @JsonProperty("offset")
-    private Long offset;
 
-    @JsonProperty("limit")
-    private Long limit;
+	@JsonProperty("offset")
+	private Long offset;
 
-
-
-
+	@JsonProperty("limit")
+	private Long limit;
 
 	public List<PropertyInfo.StatusEnum> getStatuses() {
-		if(!CollectionUtils.isEmpty(this.statuses))
+		if (!CollectionUtils.isEmpty(this.statuses))
 			return statuses;
-        else return Collections.singletonList(PropertyInfo.StatusEnum.ACTIVE);
+		else
+			return Collections.singletonList(PropertyInfo.StatusEnum.ACTIVE);
 	}
 }

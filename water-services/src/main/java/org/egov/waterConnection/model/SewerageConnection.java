@@ -20,68 +20,68 @@ import javax.validation.constraints.*;
  */
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-10-24T10:29:25.253+05:30[Asia/Kolkata]")
-public class SewerageConnection extends Connection  {
-  @JsonProperty("connectionExecutionDate")
-  private BigDecimal connectionExecutionDate = null;
+public class SewerageConnection extends Connection {
+	@JsonProperty("connectionExecutionDate")
+	private BigDecimal connectionExecutionDate = null;
 
-  public SewerageConnection connectionExecutionDate(BigDecimal connectionExecutionDate) {
-    this.connectionExecutionDate = connectionExecutionDate;
-    return this;
-  }
+	public SewerageConnection connectionExecutionDate(BigDecimal connectionExecutionDate) {
+		this.connectionExecutionDate = connectionExecutionDate;
+		return this;
+	}
 
-  /**
-   * Get connectionExecutionDate
-   * @return connectionExecutionDate
-  **/
-  @ApiModelProperty(required = true, readOnly = true, value = "")
-  @NotNull
+	/**
+	 * Get connectionExecutionDate
+	 * 
+	 * @return connectionExecutionDate
+	 **/
+	@ApiModelProperty(required = true, readOnly = true, value = "")
+	@NotNull
 
-  @Valid
-  public BigDecimal getConnectionExecutionDate() {
-    return connectionExecutionDate;
-  }
+	@Valid
+	public BigDecimal getConnectionExecutionDate() {
+		return connectionExecutionDate;
+	}
 
-  public void setConnectionExecutionDate(BigDecimal connectionExecutionDate) {
-    this.connectionExecutionDate = connectionExecutionDate;
-  }
+	public void setConnectionExecutionDate(BigDecimal connectionExecutionDate) {
+		this.connectionExecutionDate = connectionExecutionDate;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		SewerageConnection sewerageConnection = (SewerageConnection) o;
+		return Objects.equals(this.connectionExecutionDate, sewerageConnection.connectionExecutionDate)
+				&& super.equals(o);
+	}
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    SewerageConnection sewerageConnection = (SewerageConnection) o;
-    return Objects.equals(this.connectionExecutionDate, sewerageConnection.connectionExecutionDate) &&
-        super.equals(o);
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(connectionExecutionDate, super.hashCode());
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(connectionExecutionDate, super.hashCode());
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class SewerageConnection {\n");
+		sb.append("    ").append(toIndentedString(super.toString())).append("\n");
+		sb.append("    connectionExecutionDate: ").append(toIndentedString(connectionExecutionDate)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class SewerageConnection {\n");
-    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
-    sb.append("    connectionExecutionDate: ").append(toIndentedString(connectionExecutionDate)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

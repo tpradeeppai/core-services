@@ -12,298 +12,314 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * ResponseHeader should be used to carry metadata information about the response from the server. apiId, ver and msgId in ResponseHeader should always correspond to the same values in respective request&#x27;s RequestHeader.
+ * ResponseHeader should be used to carry metadata information about the
+ * response from the server. apiId, ver and msgId in ResponseHeader should
+ * always correspond to the same values in respective request&#x27;s
+ * RequestHeader.
  */
 @ApiModel(description = "ResponseHeader should be used to carry metadata information about the response from the server. apiId, ver and msgId in ResponseHeader should always correspond to the same values in respective request's RequestHeader.")
 @Validated
 @javax.annotation.Generated(value = "io.swagger.codegen.v3.generators.java.SpringCodegen", date = "2019-10-24T10:29:25.253+05:30[Asia/Kolkata]")
-public class ResponseHeader   {
-  @JsonProperty("ts")
-  private Long ts = null;
+public class ResponseHeader {
+	@JsonProperty("ts")
+	private Long ts = null;
 
-  @JsonProperty("resMsgId")
-  private String resMsgId = null;
+	@JsonProperty("resMsgId")
+	private String resMsgId = null;
 
-  @JsonProperty("msgId")
-  private String msgId = null;
+	@JsonProperty("msgId")
+	private String msgId = null;
 
-  /**
-   * status of request processing
-   */
-  public enum StatusEnum {
-    COMPLETED("COMPLETED"),
-    
-    ACCEPTED("ACCEPTED"),
-    
-    FAILED("FAILED");
+	/**
+	 * status of request processing
+	 */
+	public enum StatusEnum {
+		COMPLETED("COMPLETED"),
 
-    private String value;
+		ACCEPTED("ACCEPTED"),
 
-    StatusEnum(String value) {
-      this.value = value;
-    }
+		FAILED("FAILED");
 
-    @Override
-    @JsonValue
-    public String toString() {
-      return String.valueOf(value);
-    }
+		private String value;
 
-    @JsonCreator
-    public static StatusEnum fromValue(String text) {
-      for (StatusEnum b : StatusEnum.values()) {
-        if (String.valueOf(b.value).equals(text)) {
-          return b;
-        }
-      }
-      return null;
-    }
-  }
-  @JsonProperty("status")
-  private StatusEnum status = null;
+		StatusEnum(String value) {
+			this.value = value;
+		}
 
-  @JsonProperty("signature")
-  private String signature = null;
+		@Override
+		@JsonValue
+		public String toString() {
+			return String.valueOf(value);
+		}
 
-  @JsonProperty("error")
-  private Error error = null;
+		@JsonCreator
+		public static StatusEnum fromValue(String text) {
+			for (StatusEnum b : StatusEnum.values()) {
+				if (String.valueOf(b.value).equals(text)) {
+					return b;
+				}
+			}
+			return null;
+		}
+	}
 
-  @JsonProperty("information")
-  private Object information = null;
+	@JsonProperty("status")
+	private StatusEnum status = null;
 
-  @JsonProperty("debug")
-  private Object debug = null;
+	@JsonProperty("signature")
+	private String signature = null;
 
-  @JsonProperty("additionalInfo")
-  private Object additionalInfo = null;
+	@JsonProperty("error")
+	private Error error = null;
 
-  public ResponseHeader ts(Long ts) {
-    this.ts = ts;
-    return this;
-  }
+	@JsonProperty("information")
+	private Object information = null;
 
-  /**
-   * response time in epoch
-   * @return ts
-  **/
-  @ApiModelProperty(value = "response time in epoch")
+	@JsonProperty("debug")
+	private Object debug = null;
 
-  public Long getTs() {
-    return ts;
-  }
+	@JsonProperty("additionalInfo")
+	private Object additionalInfo = null;
 
-  public void setTs(Long ts) {
-    this.ts = ts;
-  }
+	public ResponseHeader ts(Long ts) {
+		this.ts = ts;
+		return this;
+	}
 
-  public ResponseHeader resMsgId(String resMsgId) {
-    this.resMsgId = resMsgId;
-    return this;
-  }
+	/**
+	 * response time in epoch
+	 * 
+	 * @return ts
+	 **/
+	@ApiModelProperty(value = "response time in epoch")
 
-  /**
-   * unique response message id (UUID) - will usually be the correlation id from the server
-   * @return resMsgId
-  **/
-  @ApiModelProperty(required = true, value = "unique response message id (UUID) - will usually be the correlation id from the server")
-  @NotNull
+	public Long getTs() {
+		return ts;
+	}
 
-@Size(max=256)   public String getResMsgId() {
-    return resMsgId;
-  }
+	public void setTs(Long ts) {
+		this.ts = ts;
+	}
 
-  public void setResMsgId(String resMsgId) {
-    this.resMsgId = resMsgId;
-  }
+	public ResponseHeader resMsgId(String resMsgId) {
+		this.resMsgId = resMsgId;
+		return this;
+	}
 
-  public ResponseHeader msgId(String msgId) {
-    this.msgId = msgId;
-    return this;
-  }
+	/**
+	 * unique response message id (UUID) - will usually be the correlation id
+	 * from the server
+	 * 
+	 * @return resMsgId
+	 **/
+	@ApiModelProperty(required = true, value = "unique response message id (UUID) - will usually be the correlation id from the server")
+	@NotNull
 
-  /**
-   * message id of the request
-   * @return msgId
-  **/
-  @ApiModelProperty(required = true, value = "message id of the request")
-  @NotNull
+	@Size(max = 256)
+	public String getResMsgId() {
+		return resMsgId;
+	}
 
-@Size(max=256)   public String getMsgId() {
-    return msgId;
-  }
+	public void setResMsgId(String resMsgId) {
+		this.resMsgId = resMsgId;
+	}
 
-  public void setMsgId(String msgId) {
-    this.msgId = msgId;
-  }
+	public ResponseHeader msgId(String msgId) {
+		this.msgId = msgId;
+		return this;
+	}
 
-  public ResponseHeader status(StatusEnum status) {
-    this.status = status;
-    return this;
-  }
+	/**
+	 * message id of the request
+	 * 
+	 * @return msgId
+	 **/
+	@ApiModelProperty(required = true, value = "message id of the request")
+	@NotNull
 
-  /**
-   * status of request processing
-   * @return status
-  **/
-  @ApiModelProperty(required = true, value = "status of request processing")
-  @NotNull
+	@Size(max = 256)
+	public String getMsgId() {
+		return msgId;
+	}
 
-  public StatusEnum getStatus() {
-    return status;
-  }
+	public void setMsgId(String msgId) {
+		this.msgId = msgId;
+	}
 
-  public void setStatus(StatusEnum status) {
-    this.status = status;
-  }
+	public ResponseHeader status(StatusEnum status) {
+		this.status = status;
+		return this;
+	}
 
-  public ResponseHeader signature(String signature) {
-    this.signature = signature;
-    return this;
-  }
+	/**
+	 * status of request processing
+	 * 
+	 * @return status
+	 **/
+	@ApiModelProperty(required = true, value = "status of request processing")
+	@NotNull
 
-  /**
-   * Hash describing the current ResponseHeader
-   * @return signature
-  **/
-  @ApiModelProperty(value = "Hash describing the current ResponseHeader")
+	public StatusEnum getStatus() {
+		return status;
+	}
 
-  public String getSignature() {
-    return signature;
-  }
+	public void setStatus(StatusEnum status) {
+		this.status = status;
+	}
 
-  public void setSignature(String signature) {
-    this.signature = signature;
-  }
+	public ResponseHeader signature(String signature) {
+		this.signature = signature;
+		return this;
+	}
 
-  public ResponseHeader error(Error error) {
-    this.error = error;
-    return this;
-  }
+	/**
+	 * Hash describing the current ResponseHeader
+	 * 
+	 * @return signature
+	 **/
+	@ApiModelProperty(value = "Hash describing the current ResponseHeader")
 
-  /**
-   * Get error
-   * @return error
-  **/
-  @ApiModelProperty(value = "")
+	public String getSignature() {
+		return signature;
+	}
 
-  @Valid
-  public Error getError() {
-    return error;
-  }
+	public void setSignature(String signature) {
+		this.signature = signature;
+	}
 
-  public void setError(Error error) {
-    this.error = error;
-  }
+	public ResponseHeader error(Error error) {
+		this.error = error;
+		return this;
+	}
 
-  public ResponseHeader information(Object information) {
-    this.information = information;
-    return this;
-  }
+	/**
+	 * Get error
+	 * 
+	 * @return error
+	 **/
+	@ApiModelProperty(value = "")
 
-  /**
-   * Additional information from API
-   * @return information
-  **/
-  @ApiModelProperty(value = "Additional information from API")
+	@Valid
+	public Error getError() {
+		return error;
+	}
 
-  public Object getInformation() {
-    return information;
-  }
+	public void setError(Error error) {
+		this.error = error;
+	}
 
-  public void setInformation(Object information) {
-    this.information = information;
-  }
+	public ResponseHeader information(Object information) {
+		this.information = information;
+		return this;
+	}
 
-  public ResponseHeader debug(Object debug) {
-    this.debug = debug;
-    return this;
-  }
+	/**
+	 * Additional information from API
+	 * 
+	 * @return information
+	 **/
+	@ApiModelProperty(value = "Additional information from API")
 
-  /**
-   * Debug information when requested
-   * @return debug
-  **/
-  @ApiModelProperty(value = "Debug information when requested")
+	public Object getInformation() {
+		return information;
+	}
 
-  public Object getDebug() {
-    return debug;
-  }
+	public void setInformation(Object information) {
+		this.information = information;
+	}
 
-  public void setDebug(Object debug) {
-    this.debug = debug;
-  }
+	public ResponseHeader debug(Object debug) {
+		this.debug = debug;
+		return this;
+	}
 
-  public ResponseHeader additionalInfo(Object additionalInfo) {
-    this.additionalInfo = additionalInfo;
-    return this;
-  }
+	/**
+	 * Debug information when requested
+	 * 
+	 * @return debug
+	 **/
+	@ApiModelProperty(value = "Debug information when requested")
 
-  /**
-   * Any additional information if required e.g. status url (to find out the current status of an asynchronous processing response), additional links to perform special functions like file uploads etc.
-   * @return additionalInfo
-  **/
-  @ApiModelProperty(value = "Any additional information if required e.g. status url (to find out the current status of an asynchronous processing response), additional links to perform special functions like file uploads etc.")
+	public Object getDebug() {
+		return debug;
+	}
 
-  public Object getAdditionalInfo() {
-    return additionalInfo;
-  }
+	public void setDebug(Object debug) {
+		this.debug = debug;
+	}
 
-  public void setAdditionalInfo(Object additionalInfo) {
-    this.additionalInfo = additionalInfo;
-  }
+	public ResponseHeader additionalInfo(Object additionalInfo) {
+		this.additionalInfo = additionalInfo;
+		return this;
+	}
 
+	/**
+	 * Any additional information if required e.g. status url (to find out the
+	 * current status of an asynchronous processing response), additional links
+	 * to perform special functions like file uploads etc.
+	 * 
+	 * @return additionalInfo
+	 **/
+	@ApiModelProperty(value = "Any additional information if required e.g. status url (to find out the current status of an asynchronous processing response), additional links to perform special functions like file uploads etc.")
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    ResponseHeader responseHeader = (ResponseHeader) o;
-    return Objects.equals(this.ts, responseHeader.ts) &&
-        Objects.equals(this.resMsgId, responseHeader.resMsgId) &&
-        Objects.equals(this.msgId, responseHeader.msgId) &&
-        Objects.equals(this.status, responseHeader.status) &&
-        Objects.equals(this.signature, responseHeader.signature) &&
-        Objects.equals(this.error, responseHeader.error) &&
-        Objects.equals(this.information, responseHeader.information) &&
-        Objects.equals(this.debug, responseHeader.debug) &&
-        Objects.equals(this.additionalInfo, responseHeader.additionalInfo);
-  }
+	public Object getAdditionalInfo() {
+		return additionalInfo;
+	}
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(ts, resMsgId, msgId, status, signature, error, information, debug, additionalInfo);
-  }
+	public void setAdditionalInfo(Object additionalInfo) {
+		this.additionalInfo = additionalInfo;
+	}
 
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class ResponseHeader {\n");
-    
-    sb.append("    ts: ").append(toIndentedString(ts)).append("\n");
-    sb.append("    resMsgId: ").append(toIndentedString(resMsgId)).append("\n");
-    sb.append("    msgId: ").append(toIndentedString(msgId)).append("\n");
-    sb.append("    status: ").append(toIndentedString(status)).append("\n");
-    sb.append("    signature: ").append(toIndentedString(signature)).append("\n");
-    sb.append("    error: ").append(toIndentedString(error)).append("\n");
-    sb.append("    information: ").append(toIndentedString(information)).append("\n");
-    sb.append("    debug: ").append(toIndentedString(debug)).append("\n");
-    sb.append("    additionalInfo: ").append(toIndentedString(additionalInfo)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		ResponseHeader responseHeader = (ResponseHeader) o;
+		return Objects.equals(this.ts, responseHeader.ts) && Objects.equals(this.resMsgId, responseHeader.resMsgId)
+				&& Objects.equals(this.msgId, responseHeader.msgId)
+				&& Objects.equals(this.status, responseHeader.status)
+				&& Objects.equals(this.signature, responseHeader.signature)
+				&& Objects.equals(this.error, responseHeader.error)
+				&& Objects.equals(this.information, responseHeader.information)
+				&& Objects.equals(this.debug, responseHeader.debug)
+				&& Objects.equals(this.additionalInfo, responseHeader.additionalInfo);
+	}
 
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(ts, resMsgId, msgId, status, signature, error, information, debug, additionalInfo);
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class ResponseHeader {\n");
+
+		sb.append("    ts: ").append(toIndentedString(ts)).append("\n");
+		sb.append("    resMsgId: ").append(toIndentedString(resMsgId)).append("\n");
+		sb.append("    msgId: ").append(toIndentedString(msgId)).append("\n");
+		sb.append("    status: ").append(toIndentedString(status)).append("\n");
+		sb.append("    signature: ").append(toIndentedString(signature)).append("\n");
+		sb.append("    error: ").append(toIndentedString(error)).append("\n");
+		sb.append("    information: ").append(toIndentedString(information)).append("\n");
+		sb.append("    debug: ").append(toIndentedString(debug)).append("\n");
+		sb.append("    additionalInfo: ").append(toIndentedString(additionalInfo)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
+
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }

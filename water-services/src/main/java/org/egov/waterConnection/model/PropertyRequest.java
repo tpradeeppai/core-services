@@ -16,7 +16,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 
 /**
- * Contract class to receive request. Array of Property items  are used in case of create . Where as single Property item is used for update
+ * Contract class to receive request. Array of Property items are used in case
+ * of create . Where as single Property item is used for update
  */
 @ApiModel(description = "Contract class to receive request. Array of Property items  are used in case of create . Where as single Property item is used for update")
 @Validated
@@ -27,25 +28,23 @@ import io.swagger.annotations.ApiModel;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PropertyRequest   {
-        @NotNull
-        @JsonProperty("RequestInfo")
-        private RequestInfo requestInfo;
+public class PropertyRequest {
+	@NotNull
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo;
 
-        @JsonProperty("Properties")
-        @Valid
-        @NotNull
-        @Size(min=1)
-        private List<Property> properties;
+	@JsonProperty("Properties")
+	@Valid
+	@NotNull
+	@Size(min = 1)
+	private List<Property> properties;
 
-
-        public PropertyRequest addPropertiesItem(Property propertiesItem) {
-            if (this.properties == null) {
-            this.properties = new ArrayList<>();
-            }
-        this.properties.add(propertiesItem);
-        return this;
-        }
+	public PropertyRequest addPropertiesItem(Property propertiesItem) {
+		if (this.properties == null) {
+			this.properties = new ArrayList<>();
+		}
+		this.properties.add(propertiesItem);
+		return this;
+	}
 
 }
-

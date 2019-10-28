@@ -10,8 +10,6 @@ import org.egov.waterConnection.model.PropertyCriteria;
 import org.egov.waterConnection.model.PropertyRequest;
 import org.springframework.stereotype.Component;
 
-
-
 @Component
 public class PropertyServiceImpl implements PropertyService {
 
@@ -31,8 +29,6 @@ public class PropertyServiceImpl implements PropertyService {
 		return propertyList;
 
 	}
-	
-
 
 	@Override
 	public List<Property> searchProperty(PropertyCriteria propertyCriteria, RequestInfo requestInfo) {

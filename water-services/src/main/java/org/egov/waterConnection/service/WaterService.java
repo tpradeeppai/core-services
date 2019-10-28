@@ -11,6 +11,7 @@ import org.egov.waterConnection.model.WaterConnectionSearchCriteria;
 public interface WaterService {
 
 	public List<WaterConnection> createWaterConnection(WaterConnectionRequest waterConnectionRequest);
+
 	public List<WaterConnection> search(WaterConnectionSearchCriteria criteria, RequestInfo requestInfo);
 
 }

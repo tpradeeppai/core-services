@@ -3,7 +3,6 @@ package org.egov.waterConnection.controller;
 import java.util.List;
 import javax.validation.Valid;
 
-
 import org.egov.waterConnection.model.RequestInfoWrapper;
 import org.egov.waterConnection.model.WaterConnection;
 import org.egov.waterConnection.model.WaterConnectionRequest;
@@ -41,27 +40,26 @@ public class WaterController {
 	@Autowired
 	private final ResponseInfoFactory responseInfoFactory;
 
-	@RequestMapping(value = "/_create", method = RequestMethod.POST,  produces = "application/json")
+	@RequestMapping(value = "/_create", method = RequestMethod.POST, produces = "application/json")
 	public ResponseEntity<WaterConnectionResponse> createWaterConnection(
 			@Valid @RequestBody WaterConnectionRequest waterConnectionRequest) {
 		List<WaterConnection> waterConnection = waterService.createWaterConnection(waterConnectionRequest);
 		WaterConnectionResponse response = WaterConnectionResponse.builder().waterConnection(waterConnection)
-				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(waterConnectionRequest.getRequestInfo(), true))
+				.responseInfo(responseInfoFactory
+						.createResponseInfoFromRequestInfo(waterConnectionRequest.getRequestInfo(), true))
 				.build();
 		return new ResponseEntity<>(response, HttpStatus.OK);
-		
 	}
-	
-    @RequestMapping(value="/_search", method = RequestMethod.POST)
-       public ResponseEntity<WaterConnectionResponse> search(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
-                                                          @Valid @ModelAttribute WaterConnectionSearchCriteria criteria){
 
-           List<WaterConnection> waterConnectionList = waterService.search(criteria,requestInfoWrapper.getRequestInfo());
+	@RequestMapping(value = "/_search", method = RequestMethod.POST)
+	public ResponseEntity<WaterConnectionResponse> search(@Valid @RequestBody RequestInfoWrapper requestInfoWrapper,
+			@Valid @ModelAttribute WaterConnectionSearchCriteria criteria) {
+		List<WaterConnection> waterConnectionList = waterService.search(criteria, requestInfoWrapper.getRequestInfo());
+		WaterConnectionResponse response = WaterConnectionResponse.builder().waterConnection(waterConnectionList)
+				.responseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(),
+						true))
+				.build();
+		return new ResponseEntity<>(response, HttpStatus.OK);
+	}
 
-           WaterConnectionResponse response = WaterConnectionResponse.builder().waterConnection(waterConnectionList).responseInfo(
-                   responseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper.getRequestInfo(), true))
-                   .build();
-           return new ResponseEntity<>(response, HttpStatus.OK);
-       }
-	  
 }

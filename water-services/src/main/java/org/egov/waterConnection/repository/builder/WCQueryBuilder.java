@@ -1,14 +1,13 @@
 package org.egov.waterConnection.repository.builder;
 
-import java.sql.Array;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.waterConnection.model.Property;
 import org.egov.waterConnection.model.WaterConnectionSearchCriteria;
+import org.egov.waterConnection.util.WaterServicesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -18,13 +17,24 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 public class WCQueryBuilder {
 
-	private final static String Query = "select * from water_service_connection";
+	@Autowired
+	WaterServicesUtil waterServicesUtil;
 
-	public String getSearchQueryString(WaterConnectionSearchCriteria criteria, List<Object> preparedStatement) {
+	private final static String Query = "select ws.id, ws.id,ws.property_id,ws.applicationno,ws.applicationstatus,ws.status,"
+			+ "ws.connectionno,ws.oldconnectionno,ws.documents_id,ws.connectioncategory,ws.rainwaterharvesting,ws.connectiontype,"
+			+ "ws.watersource,ws.watersource,ws.meterid,ws.meterinstallationdate" + " from water_service_connection ws";
+
+	public String getSearchQueryString(WaterConnectionSearchCriteria criteria, List<Object> preparedStatement,
+			RequestInfo requestInfo) {
 		StringBuilder query = new StringBuilder(Query);
-		if (criteria.getTenantId() != null && !criteria.getTenantId().isEmpty()) {
-			addClauseIfRequired(preparedStatement, query);
 
+		if (criteria.getTenantId() != null && !criteria.getTenantId().isEmpty()) {
+			List<String> propertyIds = new ArrayList<>();
+			addClauseIfRequired(preparedStatement, query);
+			List<Property> propertyList = waterServicesUtil.propertyCallForSearchCriteria(criteria, requestInfo);
+			propertyList.forEach(property -> propertyIds.add(property.getId()));
+			if (!propertyIds.isEmpty())
+				query.append(" property_id in (").append(createQuery(propertyIds)).append(" )");
 		}
 		if (!CollectionUtils.isEmpty(criteria.getIds())) {
 			addClauseIfRequired(preparedStatement, query);
@@ -36,7 +46,7 @@ public class WCQueryBuilder {
 			query.append(" oldconnectionno = ? ");
 			preparedStatement.add(criteria.getOldConnectionNumber());
 		}
-		
+
 		if (criteria.getOldConnectionNumber() != null && !criteria.getOldConnectionNumber().isEmpty()) {
 			addClauseIfRequired(preparedStatement, query);
 			query.append(" connectionno = ? ");
