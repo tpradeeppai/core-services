@@ -47,10 +47,18 @@ public class ValidateProperty {
 			propertyIds.add(property.getId());
 			waterConnectionSearchCriteria.setIds(propertyIds);
 		}
-		if(property.getTenantId() != null && !property.getTenantId().isEmpty()) {
+		if (property.getTenantId() != null && !property.getTenantId().isEmpty()) {
 			waterConnectionSearchCriteria.setTenantId(property.getTenantId());
 		}
 		List<Property> propertyList = waterServiceUtil.propertyCallForSearchCriteria(waterConnectionSearchCriteria,
 				waterConnectionRequest.getRequestInfo());
+	}
+
+	public boolean isPropertyIdPresent(WaterConnectionRequest waterConnectionRequest) {
+		Property property = new WaterConnectionRequest().getWaterConnection().getProperty();
+		if (property.getId() == null || !property.getId().isEmpty()) {
+			return false;
+		}
+		return true;
 	}
 }

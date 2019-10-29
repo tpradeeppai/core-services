@@ -1,5 +1,7 @@
 package org.egov.waterConnection.service;
 
+import java.util.ArrayList;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -37,15 +39,19 @@ public class WaterServiceImpl implements WaterService {
 
 	@Override
 	public List<WaterConnection> createWaterConnection(WaterConnectionRequest waterConnectionRequest) {
-		enrichWaterConnection(waterConnectionRequest);
+		List<Property> propertyList;
+		waterConnectionValidator.validateWaterConnection(waterConnectionRequest, false);
+		if (!validateProperty.isPropertyIdPresent(waterConnectionRequest)) {
+			propertyList = waterServicesUtil.propertyCall(waterConnectionRequest);
+		} else {
+			propertyList = waterServicesUtil.createPropertyRequest(waterConnectionRequest);
+		}
+		enrichWaterConnection(waterConnectionRequest, propertyList);
 		waterDao.saveWaterConnection(waterConnectionRequest);
 		return Arrays.asList(waterConnectionRequest.getWaterConnection());
 	}
 
-	public void enrichWaterConnection(WaterConnectionRequest waterConnectionRequest) {
-		List<Property> propertyList = waterServicesUtil.propertyCall(waterConnectionRequest);
-
-		// if propertt is empty then create property
+	public void enrichWaterConnection(WaterConnectionRequest waterConnectionRequest, List<Property> propertyList) {
 		if (propertyList != null && !propertyList.isEmpty())
 			waterConnectionRequest.getWaterConnection().setProperty(propertyList.get(0));
 	}

@@ -33,7 +33,7 @@ public class WaterConnectionValidator {
 
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
-	
+
 	@Autowired
 	WaterDao waterDao;
 
@@ -44,7 +44,6 @@ public class WaterConnectionValidator {
 	private String mdmsEndpoint;
 
 	public void validateCreateRequest(WaterConnectionRequest request) {
-		validateOtherFields(request);
 		validateMasterData(request);
 	}
 
@@ -78,10 +77,6 @@ public class WaterConnectionValidator {
 		}
 	}
 
-	private void validateOtherFields(WaterConnectionRequest request) {
-
-	}
-
 	private void validateMDMSData(String[] masterNames, Map<String, List<String>> codes) {
 		Map<String, String> errorMap = new HashMap<>();
 		for (String masterName : masterNames) {
@@ -96,25 +91,27 @@ public class WaterConnectionValidator {
 	public void validateWaterConnection(WaterConnectionRequest waterConnectionRequest, boolean isUpdate) {
 		WaterConnection waterConnection = waterConnectionRequest.getWaterConnection();
 		Map<String, String> errorMap = new HashMap<>();
-		if (isUpdate && waterConnection.getId() == null || waterConnection.getId().isEmpty()) {
-			errorMap.put("INVALID WATERCONNECTION", "WaterConnection cannot be updated without connection id");
+		if (isUpdate && (waterConnection.getId() == null || waterConnection.getId().isEmpty())) {
+			errorMap.put("INVALID WATER CONNECTION", "WaterConnection cannot be updated without connection id");
 		}
 		if (!isUpdate && waterConnection.getId() != null && !waterConnection.getId().isEmpty()) {
 			int n = waterDao.isWaterConnectionExist(Arrays.asList(waterConnection.getId()));
 			if (n > 0) {
-				errorMap.put("INVALID WATERCONNECTION", "WaterConnection id is not valid");
+				errorMap.put("INVALID WATER CONNECTION", "WaterConnection id is not valid");
 			}
 		}
 		if (waterConnection.getConnectionType() == null || waterConnection.getConnectionType().isEmpty()) {
-			errorMap.put("INVALID WATERCONNECTION", "WaterConnection cannot be updated without connection type");
+			errorMap.put("INVALID WATER CONNECTION", "WaterConnection cannot be updated without connection type");
 		}
 		if (waterConnection.getConnectionCategory() == null || waterConnection.getConnectionCategory().isEmpty()) {
-			errorMap.put("INVALID WATERCONNECTION", "WaterConnection cannot be updated without connection category");
+			errorMap.put("INVALID WATER CONNECTION", "WaterConnection cannot be updated without connection category");
+		}
+		if (waterConnection.getWaterSource() == null || waterConnection.getWaterSource().isEmpty()) {
+			errorMap.put("INVALID WATER CONNECTION", "WaterConnection cannot be created without water source");
 		}
 
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
-	
-	
+
 }
