@@ -28,6 +28,7 @@ public class WaterRowMapper implements ResultSetExtractor<List<WaterConnection>>
 			waterConnection.setOldConnectionNo(rs.getString("oldconnectionno"));
 			waterConnection.setApplicationStatus(ApplicationStatusEnum.valueOf(rs.getString("applicationstatus")));
 			waterConnection.setStatus(StatusEnum.valueOf(rs.getString("status")));
+			//get property id and get property object 
 			waterConnection.setProperty(new Property());
 			waterConnectionList.add(waterConnection);
 			// waterConnection.setDocuments(rs.getString("documents_id"));

@@ -13,5 +13,7 @@ public interface WaterDao {
 	public List<WaterConnection> getWaterConnectionList(WaterConnectionSearchCriteria criteria,RequestInfo requestInfo);
 	
 	public void updateWaterConnection(WaterConnectionRequest waterConnectionRequest);
+	
+	public int isWaterConnectionExist(List<String> ids);
 
 }

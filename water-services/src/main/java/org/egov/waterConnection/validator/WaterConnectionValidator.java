@@ -12,6 +12,7 @@ import org.egov.tracer.model.CustomException;
 import org.egov.waterConnection.model.WaterConnection;
 import org.egov.waterConnection.model.WaterConnectionRequest;
 import org.egov.waterConnection.repository.ServiceRequestRepository;
+import org.egov.waterConnection.repository.WaterDao;
 import org.egov.waterConnection.util.WCConstants;
 import org.egov.waterConnection.util.WaterServicesUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class WaterConnectionValidator {
 
 	@Autowired
 	private ServiceRequestRepository serviceRequestRepository;
+	
+	@Autowired
+	WaterDao waterDao;
 
 	@Value("${egov.mdms.host}")
 	private String mdmsHost;
@@ -95,13 +99,22 @@ public class WaterConnectionValidator {
 		if (isUpdate && waterConnection.getId() == null || waterConnection.getId().isEmpty()) {
 			errorMap.put("INVALID WATERCONNECTION", "WaterConnection cannot be updated without connection id");
 		}
+		if (!isUpdate && waterConnection.getId() != null && !waterConnection.getId().isEmpty()) {
+			int n = waterDao.isWaterConnectionExist(Arrays.asList(waterConnection.getId()));
+			if (n > 0) {
+				errorMap.put("INVALID WATERCONNECTION", "WaterConnection id is not valid");
+			}
+		}
 		if (waterConnection.getConnectionType() == null || waterConnection.getConnectionType().isEmpty()) {
 			errorMap.put("INVALID WATERCONNECTION", "WaterConnection cannot be updated without connection type");
 		}
 		if (waterConnection.getConnectionCategory() == null || waterConnection.getConnectionCategory().isEmpty()) {
 			errorMap.put("INVALID WATERCONNECTION", "WaterConnection cannot be updated without connection category");
 		}
+
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
+	
+	
 }

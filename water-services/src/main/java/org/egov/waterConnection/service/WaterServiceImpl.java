@@ -1,6 +1,5 @@
 package org.egov.waterConnection.service;
 
-
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +31,7 @@ public class WaterServiceImpl implements WaterService {
 
 	@Autowired
 	WaterConnectionValidator waterConnectionValidator;
-	
+
 	@Autowired
 	ValidateProperty validateProperty;
 
@@ -45,21 +44,22 @@ public class WaterServiceImpl implements WaterService {
 
 	public void enrichWaterConnection(WaterConnectionRequest waterConnectionRequest) {
 		List<Property> propertyList = waterServicesUtil.propertyCall(waterConnectionRequest);
+
+		// if propertt is empty then create property
 		if (propertyList != null && !propertyList.isEmpty())
 			waterConnectionRequest.getWaterConnection().setProperty(propertyList.get(0));
 	}
 
 	public List<WaterConnection> search(WaterConnectionSearchCriteria criteria, RequestInfo requestInfo) {
 		List<WaterConnection> waterConnectionList;
-
 		List<Property> propertyList = waterServicesUtil.propertyCallForSearchCriteria(criteria, requestInfo);
-        waterConnectionList = getWaterConnectionsList(criteria, requestInfo);
-        return waterConnectionList;
+		waterConnectionList = getWaterConnectionsList(criteria, requestInfo);
+		return waterConnectionList;
 	}
 
 	public List<WaterConnection> getWaterConnectionsList(WaterConnectionSearchCriteria criteria,
 			RequestInfo requestInfo) {
-		List<WaterConnection> waterConnectionList = waterDao.getWaterConnectionList(criteria,requestInfo);
+		List<WaterConnection> waterConnectionList = waterDao.getWaterConnectionList(criteria, requestInfo);
 		if (waterConnectionList.isEmpty())
 			return Collections.emptyList();
 		return waterConnectionList;
@@ -68,7 +68,6 @@ public class WaterServiceImpl implements WaterService {
 	@Override
 	public List<WaterConnection> updateWaterConnection(WaterConnectionRequest waterConnectionRequest) {
 		waterConnectionValidator.validateWaterConnection(waterConnectionRequest, true);
-		validateProperty.validatePropertyCriteria(waterConnectionRequest);
 		validateProperty.validatePropertyCriteria(waterConnectionRequest);
 		waterDao.updateWaterConnection(waterConnectionRequest);
 		return Arrays.asList(waterConnectionRequest.getWaterConnection());

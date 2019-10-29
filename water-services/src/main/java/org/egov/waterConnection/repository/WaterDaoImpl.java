@@ -51,4 +51,14 @@ public class WaterDaoImpl implements WaterDao {
 		waterConnectionProducer.push("${egov.waterservice.updateWaterConnection}", waterConnectionRequest);
 	}
 
+	@Override
+	public int isWaterConnectionExist(List<String> ids) {
+		int n = 0;
+		List<Object> preparedStatement = new ArrayList<>();
+		String query = wCQueryBuilder.getNoOfWaterConnectionQuery(ids, preparedStatement);
+		log.info("Query: " + query);
+		n = jdbcTemplate.queryForObject(query, preparedStatement.toArray(), Integer.class);
+		return n;
+	}
+
 }

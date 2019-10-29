@@ -52,7 +52,7 @@ public class WaterServicesUtil {
 
 	public List<Property> propertyCall(WaterConnectionRequest waterConnectionRequest) {
 		RequestInfo requestInfo = waterConnectionRequest.getRequestInfo();
-		Set<String> propertyIds = new HashSet<>();
+		Set<String> propertyIds = new HashSet<>();   //localise
 		List<Property> propertyList = new ArrayList<>();
 		PropertyCriteria propertyCriteria = new PropertyCriteria();
 		HashMap<String, Object> propertyRequestObj = new HashMap<>();
@@ -64,7 +64,7 @@ public class WaterServicesUtil {
 					getPropertyRequestInfoWrapperSearch(new RequestInfoWrapper(), requestInfo));
 			propertyRequestObj.put("PropertyCriteria", propertyCriteria);
 			Object result = serviceRequestRepository.fetchResult(getPropertySearchURL(), propertyRequestObj);
-			propertyList = getPropertyDetails(result);
+			propertyList = getPropertyDetails(result);   //?somebody sending id but that id is not present // validate property
 			if (propertyList == null || propertyList.isEmpty())
 				propertyList = createPropertyRequest(waterConnectionRequest);
 			return propertyList;

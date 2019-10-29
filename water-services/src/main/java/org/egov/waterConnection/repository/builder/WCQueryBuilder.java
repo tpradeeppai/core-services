@@ -23,6 +23,8 @@ public class WCQueryBuilder {
 	private final static String Query = "select ws.id, ws.id,ws.property_id,ws.applicationno,ws.applicationstatus,ws.status,"
 			+ "ws.connectionno,ws.oldconnectionno,ws.documents_id,ws.connectioncategory,ws.rainwaterharvesting,ws.connectiontype,"
 			+ "ws.watersource,ws.watersource,ws.meterid,ws.meterinstallationdate" + " from water_service_connection ws";
+	
+	private final static String noOfConnectionSearchQuery = "select count(*) from water_service where";
 
 	public String getSearchQueryString(WaterConnectionSearchCriteria criteria, List<Object> preparedStatement,
 			RequestInfo requestInfo) {
@@ -54,12 +56,11 @@ public class WCQueryBuilder {
 		}
 		return query.toString();
 	}
-
 	private void addClauseIfRequired(List<Object> values, StringBuilder queryString) {
 		if (values.isEmpty())
 			queryString.append(" WHERE ");
 		else {
-			queryString.append(" OR");
+			queryString.append(" AND"); // AND
 		}
 	}
 
@@ -78,5 +79,12 @@ public class WCQueryBuilder {
 		ids.forEach(id -> {
 			preparedStatement.add(id);
 		});
+	}
+	
+	public String getNoOfWaterConnectionQuery(List<String> connectionIds, List<Object> preparedStatement) {
+		StringBuilder query = new StringBuilder(noOfConnectionSearchQuery);
+		query.append(" id in (").append(createQuery(connectionIds)).append(" )");
+		addToPreparedStatement(preparedStatement, connectionIds);
+		return query.toString();
 	}
 }
