@@ -3,6 +3,7 @@ package org.egov.waterConnection.util;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -14,6 +15,7 @@ import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
+import org.egov.tracer.model.CustomException;
 import org.egov.waterConnection.model.Property;
 import org.egov.waterConnection.model.PropertyCriteria;
 import org.egov.waterConnection.model.PropertyRequest;
@@ -72,14 +74,13 @@ public class WaterServicesUtil {
 		PropertyRequest propertyReq = getPropertyRequest(waterConnectionRequest.getRequestInfo(), propertyList);
 		Object result = serviceRequestRepository.fetchResult(getPropertyCreateURL(), propertyReq);
 		return getPropertyDetails(result);
-
 	}
 
 	public List<Property> propertyCallForSearchCriteria(WaterConnectionSearchCriteria waterConnectionSearchCriteria,
 			RequestInfo requestInfo) {
-		if (waterConnectionSearchCriteria.getTenantId() != null) {
-			HashMap<String, Object> propertyRequestObj = new HashMap<>();
-			PropertyCriteria propertyCriteria = new PropertyCriteria();
+		HashMap<String, Object> propertyRequestObj = new HashMap<>();
+		PropertyCriteria propertyCriteria = new PropertyCriteria();
+		if (waterConnectionSearchCriteria.getTenantId() != null && !waterConnectionSearchCriteria.getTenantId().isEmpty()) {
 			propertyCriteria.setTenantId(waterConnectionSearchCriteria.getTenantId());
 			RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 			requestInfoWrapper.setRequestInfo(requestInfo);
@@ -92,7 +93,10 @@ public class WaterServicesUtil {
 			Object result = serviceRequestRepository.fetchResult(getPropertySearchURL(), propertyRequestObj);
 			return getPropertyDetails(result);
 		}
-		return new ArrayList<>();
+		if(waterConnectionSearchCriteria.getMobileNumber() != null && !waterConnectionSearchCriteria.getMobileNumber().isEmpty()) {
+			propertyCriteria.setMobileNumber(waterConnectionSearchCriteria.getMobileNumber());
+		}
+		return Collections.emptyList();
 	}
 
 	private RequestInfoWrapper getPropertyRequestInfoWrapperSearch(RequestInfoWrapper requestInfoWrapper,
@@ -110,8 +114,13 @@ public class WaterServicesUtil {
 
 	private List<Property> getPropertyDetails(Object result) {
 		ObjectMapper mapper = new ObjectMapper();
+		try {
 		PropertyResponse propertyResponse = mapper.convertValue(result, PropertyResponse.class);
 		return propertyResponse.getProperties();
+		}
+		catch(Exception ex) {
+			throw new CustomException("Excetion Occured!", "Exception while fetching the property!");
+		}
 	}
 
 	private PropertyRequest getPropertyRequest(RequestInfo requestInfo, List<Property> propertyList) {
@@ -134,7 +143,6 @@ public class WaterServicesUtil {
 		names.forEach(name -> {
 			masterDetails.add(MasterDetail.builder().name(name).filter(filter).build());
 		});
-
 		ModuleDetail moduleDetail = ModuleDetail.builder().moduleName(moduleName).masterDetails(masterDetails).build();
 		List<ModuleDetail> moduleDetails = new ArrayList<>();
 		moduleDetails.add(moduleDetail);

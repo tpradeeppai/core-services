@@ -58,7 +58,6 @@ public class WaterServiceImpl implements WaterService {
 
 	public List<WaterConnection> search(WaterConnectionSearchCriteria criteria, RequestInfo requestInfo) {
 		List<WaterConnection> waterConnectionList;
-		List<Property> propertyList = waterServicesUtil.propertyCallForSearchCriteria(criteria, requestInfo);
 		waterConnectionList = getWaterConnectionsList(criteria, requestInfo);
 		return waterConnectionList;
 	}
