@@ -3,75 +3,57 @@ serviceMaps:
  mappings:
  - version: 1.0
    name: WaterConnection
-   description: create WaterConnectionDetails in water_service_connection
-   fromTopic: shriya
+   description: create ConnectionDetails in connection
+   fromTopic: createWaterConnection
    isTransaction: true
    queryMaps: 
-    - query: INSERT INTO water_service_connection(id,property_id,applicationno,applicationstatus,status,connectionno,oldconnectionno,documents_id,connectioncategory,rainwaterharvesting,connectiontype,watersource,meterid,meterinstallationdate) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?);
-      basePath: $.waterConnection.*
+    - query: INSERT INTO connection (id, property_id, applicationNo, applicationStatus, status, connectionNo, oldConnectionNo, documents_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.WaterConnection
       jsonMaps:
-       - jsonPath: $.waterConnection.*.id
-       
-       - jsonPath: $.waterConnection.*.property.propertyId
-         
-       - jsonPath: $.waterConnection.*.applicationNo
+       - jsonPath: $.WaterConnection.id 
+        
+       - jsonPath: $.WaterConnection.property.id
 
-       - jsonPath: $.waterConnection.*.applicationStatus
-       
-         
-       - jsonPath: $.waterConnection.*.status
-         
-       - jsonPath: $.waterConnection.*.connectionNo
+       - jsonPath: $.WaterConnection.applicationNo
+        
+       - jsonPath: $.WaterConnection.applicationStatus
 
-       - jsonPath: $.waterConnection.*.oldConnectionNo
-         
-         
-       - jsonPath: $.waterConnection.*.documents.*.id
-       
-       
-       - jsonPath: $.waterConnection.*.connectionCategory
-         
+       - jsonPath: $.WaterConnection.status
 
-       - jsonPath: $.waterConnection.*.rainWaterHarvesting
-         type: BOOLEAN 
-         dbType: BOOLEAN
-         
-       - jsonPath: $.waterConnection.*.connectionType
-         
-       - jsonPath: $.waterConnection.*.waterSource
-         
-       - jsonPath: $.waterConnection.*.meterId
-         
-       - jsonPath: $.waterConnection.*.meterInstallationDate
+       - jsonPath: $.WaterConnection.connectionNo
+
+       - jsonPath: $.WaterConnection.oldConnectionNo
+
+       - jsonPath: $.WaterConnection.documents.*.id      
+
+
+
+
+
 
  
  - version: 1.0
-   description: Creating property details in eg_pt_property_v2  table
-   fromTopic: shriya
+   description: create WaterConnectionDetails in water_service_connection
+   fromTopic: createWaterConnection
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO eg_pt_property_v2(tenantId,propertyId, status,acknowldgementNumber, oldPropertyId, creationReason, occupancyDate ,createdBy,createdTime,lastModifiedBy,lastModifiedTime) VALUES (?,?,?,?,?,?,?,?,?,?,?);
-      basePath: $.waterConnection.*.property.
+    - query: INSERT INTO water_service_connection(connection_id,connectionCategory,rainWaterHarvesting,connectionType,waterSource,meterId,meterInstallationDate) VALUES(?,?,?,?,?,?,?);
+      basePath: $.WaterConnection
       jsonMaps:
-       - jsonPath: $.waterConnection.*.property.tenantId
 
-       - jsonPath: $.waterConnection.*.property.propertyId
+       - jsonPath: $.WaterConnection.id
+       - jsonPath: $.WaterConnection.connectionCategory
+         
 
-       - jsonPath: $.waterConnection.*.property.status
-
-       - jsonPath: $.waterConnection.*.property.acknowldgementNumber
-
-       - jsonPath: $.waterConnection.*.property.oldPropertyId
-
-       - jsonPath: $.waterConnection.*.property.creationReason
-
-       - jsonPath: $.waterConnection.*.property.occupancyDate
-
-       - jsonPath: $.waterConnection.*.property.auditDetails.createdBy
-
-       - jsonPath: $.waterConnection.*.property.auditDetails.createdTime
-
-       - jsonPath: $.waterConnection.*.property.auditDetails.lastModifiedBy
-
-       - jsonPath: $.waterConnection.*.property.auditDetails.lastModifiedTime
+       - jsonPath: $.WaterConnection.rainWaterHarvesting
+         type: BOOLEAN 
+         dbType: BOOLEAN
+         
+       - jsonPath: $.WaterConnection.connectionType
+         
+       - jsonPath: $.WaterConnection.waterSource
+         
+       - jsonPath: $.WaterConnection.meterId
+         
+       - jsonPath: $.WaterConnection.meterInstallationDate
 
