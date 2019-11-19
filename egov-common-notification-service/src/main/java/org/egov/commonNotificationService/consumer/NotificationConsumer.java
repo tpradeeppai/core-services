@@ -10,22 +10,22 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 
 @Slf4j
-@Component
+@Service
 public class NotificationConsumer {
 
-    @Autowired
     private NotificationService notificationService;
 
-   /* @Autowired
+    @Autowired
     public NotificationConsumer(NotificationService notificationService) {
         this.notificationService = notificationService;
     }
-*/
-    @KafkaListener(topics = {"${persister.update.tradelicense.topic}","${persister.save.tradelicense.topic}","${persister.update.tradelicense.workflow.topic}","${persister.save.property.topic}","${persister.update.property.topic}"})
+
+    @KafkaListener(topics = {"${persister.update.tradelicense.topic}","${persister.save.tradelicense.topic}","${persister.update.tradelicense.workflow.topic}"})
     public void listen(final HashMap<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic) {
 
         try {

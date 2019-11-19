@@ -28,7 +28,6 @@ import static org.egov.commonNotificationService.util.Constants.*;
 @Slf4j
 public class NotificationService {
 
-    @Autowired
     private Configuration config;
 
     private ServiceRequestRepository serviceRequestRepository;
@@ -38,13 +37,13 @@ public class NotificationService {
     private RestTemplate rest;
 
 
-   /* @Autowired
-    public NotificationService(TLConfiguration config, ServiceRequestRepository serviceRequestRepository, NotificationUtil util, RestTemplate rest) {
+    @Autowired
+    public NotificationService(Configuration config, ServiceRequestRepository serviceRequestRepository, NotificationUtil util, RestTemplate rest) {
         this.config = config;
         this.serviceRequestRepository = serviceRequestRepository;
         this.util = util;
         this.rest = rest;
-    }*/
+    }
 
     public void process(JSONObject record, String topic){
         List<SMSRequest> smsRequests = new LinkedList<>();
