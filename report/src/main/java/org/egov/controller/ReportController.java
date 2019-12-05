@@ -35,21 +35,21 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class ReportController {
 
 	public ReportDefinitions reportDefinitions;
-
+	
 	public static final Logger LOGGER = LoggerFactory.getLogger(ReportController.class);
 
-
+	
 	@Autowired
 	public ReportController(ReportDefinitions reportDefinitions) {
 		this.reportDefinitions = reportDefinitions;
 	}
-
+	
 	@Autowired
 	private ReportService reportService;
 	
 	/*@Autowired
 	private ReportQueryBuilder reportQueryBuilder;*/
-
+	
 	@Autowired
     public static ResourceLoader resourceLoader;
 
@@ -61,27 +61,26 @@ public class ReportController {
 		System.out.println("The Module Name from the URI is :"+moduleName);
 		MetadataResponse mdr = reportService.getMetaData(metaDataRequest,moduleName);
 		return reportService.getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
-		} catch(Exception e){
-			e.printStackTrace();
+		} catch(NullPointerException e){
 			return reportService.getFailureResponse(metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
 		}
 	}
-
+	
 	@PostMapping("/{moduleName}/_get")
 	@ResponseBody
 	public ResponseEntity<?> getReportData(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
 			final BindingResult errors) {
-
-
+		  
+		   
 		try {
 			ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName(),reportRequest.getRequestInfo().getAuthToken());
 			return new ResponseEntity<>(reportResponse, HttpStatus.OK);
-		} catch(Exception e){
+		} catch(NullPointerException e){
 			e.printStackTrace();
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());
 		}
 	}
-
+	
 	@PostMapping("/{moduleName}/total/_get")
 	@ResponseBody
 	public ResponseEntity<?> getReportDataTotal(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
@@ -89,23 +88,22 @@ public class ReportController {
 		try {
 			ReportResponse reportResponse = reportService.getReportData(reportRequest,moduleName,reportRequest.getReportName(),reportRequest.getRequestInfo().getAuthToken());
 			return new ResponseEntity<>(reportResponse.getReportData().size(), HttpStatus.OK);
-		} catch(Exception e){
+		} catch(NullPointerException e){
 			e.printStackTrace();
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());
 		}
 	}
-
+	
 
 	@PostMapping("_reload")
 	@ResponseBody
 	public ResponseEntity<?> reloadYamlData(@RequestBody @Valid final MetaDataRequest reportRequest,
 			final BindingResult errors) {
 		try {
-
+        
 		ReportApp.loadYaml("common");
-
+        
 		} catch(Exception e){
-			e.printStackTrace();
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId(),e);
 		}
 		return reportService.reloadResponse(reportRequest.getRequestInfo(),null);
@@ -120,12 +118,11 @@ public class ReportController {
 		System.out.println("The Module Name from the URI is :"+moduleName);
 		MetadataResponse mdr = reportService.getMetaData(metaDataRequest,moduleName);
 		return reportService.getSuccessResponse(mdr, metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
-		} catch(Exception e){
-			e.printStackTrace();
+		} catch(NullPointerException e){
 			return reportService.getFailureResponse(metaDataRequest.getRequestInfo(),metaDataRequest.getTenantId());
 		}
 	}
-
+	
 	@PostMapping("/{moduleName}/{version}/_get")
 	@ResponseBody
 	public ResponseEntity<?> getReportDatav1(@PathVariable("moduleName") String moduleName,@RequestBody @Valid final ReportRequest reportRequest,
@@ -133,12 +130,11 @@ public class ReportController {
 		try {
 		List<ReportResponse> reportResponse = reportService.getAllReportData(reportRequest,moduleName,reportRequest.getRequestInfo().getAuthToken());
 		return reportService.getReportDataSuccessResponse(reportResponse, reportRequest.getRequestInfo(),reportRequest.getTenantId());
-		} catch(Exception e){
-			e.printStackTrace();
+		} catch(NullPointerException e){
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId());
 		}
 	}
-
+	
 
 	@PostMapping("{moduleName}/{version}/_reload")
 	@ResponseBody
@@ -148,7 +144,6 @@ public class ReportController {
 
 		ReportApp.loadYaml(moduleName);
 		} catch(Exception e){
-			e.printStackTrace();
 			return reportService.getFailureResponse(reportRequest.getRequestInfo(),reportRequest.getTenantId(),e);
 		}
 		return reportService.reloadResponse(reportRequest.getRequestInfo(),null);
@@ -169,6 +164,6 @@ public class ReportController {
 		return new ResponseEntity<>(request, HttpStatus.OK);
 
 	}
-*/
-
+*/	
+	
 }

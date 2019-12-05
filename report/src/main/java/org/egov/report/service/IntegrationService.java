@@ -3,7 +3,11 @@ package org.egov.report.service;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
-import java.util.*;
+import java.util.Calendar;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -70,7 +74,7 @@ public class IntegrationService {
 					}
 					columnDetail.setDefaultValue(map);
 				}else{
-
+					
 					String res = "";
 					 String[] stateid = null;
 					 
@@ -101,23 +105,9 @@ public class IntegrationService {
 					Object document = Configuration.defaultConfiguration().jsonProvider().parse(res);
 					
 					List<Object> keys = JsonPath.read(document, patterns[1]);
+					
 					List<Object> values = JsonPath.read(document, patterns[2]);
-					if(searchColumn.getLocalisationRequired()){
-						List<Object> keysAfterLoc = new ArrayList<>();
-						List<Object> valuesAfterLoc = new ArrayList<>();
-						for(int i=0;i<keys.size();i++)
-						{
-							String servicecode=((String)keys.get(i)).replaceAll("\\..*","").toUpperCase();
-							String localisationLabel=searchColumn.getLocalisationPrefix()+servicecode;
-							if(!valuesAfterLoc.contains(localisationLabel))
-							{
-								keysAfterLoc.add(servicecode);
-								valuesAfterLoc.add(localisationLabel);
-							}
-						}
-						keys= keysAfterLoc;
-						values=valuesAfterLoc;
-					}
+					
 					Map<Object, Object> map = new LinkedHashMap<>();
 					for(int i=0;i<keys.size();i++){
 						map.put(keys.get(i), values.get(i));
@@ -154,4 +144,8 @@ public class IntegrationService {
 	  calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
 	  return calendar.getTimeInMillis();
 	}
+	  
+
+	
+
 }
