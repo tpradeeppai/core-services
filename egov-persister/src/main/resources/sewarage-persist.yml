@@ -1,0 +1,93 @@
+serviceMaps:
+ serviceName: Sewerage Connection Service
+ mappings:
+ - version: 1.0
+   name: SewerageConnection
+   description: create ConnectionDetails in connection and sewarage_service_connection
+   fromTopic: createSewerageConnection
+   isTransaction: true
+   queryMaps: 
+    - query: INSERT INTO connection (id, property_id, applicationNo, applicationStatus, status, connectionNo, oldConnectionNo, documents_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.SewerageConnection
+      jsonMaps:
+       - jsonPath: $.SewerageConnection.id 
+        
+       - jsonPath: $.SewerageConnection.property.id
+
+       - jsonPath: $.SewerageConnection.applicationNo
+        
+       - jsonPath: $.SewerageConnection.applicationStatus
+
+       - jsonPath: $.SewerageConnection.status
+
+       - jsonPath: $.SewerageConnection.connectionNo
+
+       - jsonPath: $.SewerageConnection.oldConnectionNo
+
+       - jsonPath: $.SewerageConnection.documents.*.id      
+
+    - query: INSERT INTO sewarage_service_connection(connection_id,connectionExecutionDate,noOfWaterClosets,noOfToilets,UOM,connectiontype,calculationAttribute) VALUES(?,?,?,?,?,?,?);
+      basePath: $.SewerageConnection
+      jsonMaps:
+
+       - jsonPath: $.SewerageConnection.id
+       - jsonPath: $.SewerageConnection.connectionExecutionDate
+         
+
+       - jsonPath: $.SewerageConnection.noOfWaterClosets
+         
+       - jsonPath: $.SewerageConnection.noOfToilets
+         
+       - jsonPath: $.SewerageConnection.uom
+         
+       - jsonPath: $.SewerageConnection.connectionType
+         
+       - jsonPath: $.SewerageConnection.calculationAttribute
+
+ - version: 1.0
+   name: SewerageConnection
+   description: update ConnectionDetails in connection and sewarage_service_connection
+   fromTopic: updateSewerageConnection
+   isTransaction: true
+   queryMaps: 
+    - query: UPDATE connection SET property_id=?, applicationNo=?, applicationStatus=?, status=?, connectionNo=?, oldConnectionNo=?, documents_id=? WHERE id=?;
+      basePath: $.SewerageConnection
+      jsonMaps:
+       - jsonPath: $.SewerageConnection.id 
+        
+       - jsonPath: $.SewerageConnection.property.id
+
+       - jsonPath: $.SewerageConnection.applicationNo
+        
+       - jsonPath: $.SewerageConnection.applicationStatus
+
+       - jsonPath: $.SewerageConnection.status
+
+       - jsonPath: $.SewerageConnection.connectionNo
+
+       - jsonPath: $.SewerageConnection.oldConnectionNo
+
+       - jsonPath: $.SewerageConnection.documents.*.id      
+
+    - query: UPDATE water_service_connection SET connection_id=?,connectionexecutiondate=? WHERE connection_id=?;
+      basePath: $.SewerageConnection
+      jsonMaps:
+
+       
+       - jsonPath: $.SewerageConnection.connectionCategory
+         
+
+       - jsonPath: $.SewerageConnection.rainWaterHarvesting
+         type: BOOLEAN 
+         dbType: BOOLEAN
+         
+       - jsonPath: $.SewerageConnection.connectionType
+         
+       - jsonPath: $.SewerageConnection.waterSource
+         
+       - jsonPath: $.SewerageConnection.meterId
+         
+       - jsonPath: $.SewerageConnection.meterInstallationDate
+       - jsonPath: $.SewerageConnection.id
+
+
