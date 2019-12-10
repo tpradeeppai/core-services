@@ -4,7 +4,7 @@ serviceMaps:
  - version: 1.0
    name: SewerageConnection
    description: create ConnectionDetails in connection and sewarage_service_connection
-   fromTopic: createSewerageConnection
+   fromTopic: save-sw-connection
    isTransaction: true
    queryMaps: 
     - query: INSERT INTO connection (id, property_id, applicationNo, applicationStatus, status, connectionNo, oldConnectionNo, documents_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
@@ -31,8 +31,8 @@ serviceMaps:
       jsonMaps:
 
        - jsonPath: $.SewerageConnection.id
+
        - jsonPath: $.SewerageConnection.connectionExecutionDate
-         
 
        - jsonPath: $.SewerageConnection.noOfWaterClosets
          
@@ -47,13 +47,12 @@ serviceMaps:
  - version: 1.0
    name: SewerageConnection
    description: update ConnectionDetails in connection and sewarage_service_connection
-   fromTopic: updateSewerageConnection
+   fromTopic: update-sw-connection
    isTransaction: true
    queryMaps: 
     - query: UPDATE connection SET property_id=?, applicationNo=?, applicationStatus=?, status=?, connectionNo=?, oldConnectionNo=?, documents_id=? WHERE id=?;
       basePath: $.SewerageConnection
       jsonMaps:
-       - jsonPath: $.SewerageConnection.id 
         
        - jsonPath: $.SewerageConnection.property.id
 
@@ -69,25 +68,22 @@ serviceMaps:
 
        - jsonPath: $.SewerageConnection.documents.*.id      
 
-    - query: UPDATE water_service_connection SET connection_id=?,connectionexecutiondate=? WHERE connection_id=?;
+    - query: UPDATE sewarage_service_connection SET connectionexecutiondate=?,noOfWaterClosets=?,noOfToilets=?,UOM=?,connectiontype=?,calculationAttribute=? WHERE connection_id=?;
       basePath: $.SewerageConnection
       jsonMaps:
 
        
-       - jsonPath: $.SewerageConnection.connectionCategory
-         
 
-       - jsonPath: $.SewerageConnection.rainWaterHarvesting
-         type: BOOLEAN 
-         dbType: BOOLEAN
+       - jsonPath: $.SewerageConnection.connectionExecutionDate
+
+       - jsonPath: $.SewerageConnection.noOfWaterClosets
+         
+       - jsonPath: $.SewerageConnection.noOfToilets
+         
+       - jsonPath: $.SewerageConnection.uom
          
        - jsonPath: $.SewerageConnection.connectionType
          
-       - jsonPath: $.SewerageConnection.waterSource
-         
-       - jsonPath: $.SewerageConnection.meterId
-         
-       - jsonPath: $.SewerageConnection.meterInstallationDate
-       - jsonPath: $.SewerageConnection.id
+       - jsonPath: $.SewerageConnection.calculationAttribute
 
 
