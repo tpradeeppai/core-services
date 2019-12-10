@@ -7,19 +7,15 @@ import org.egov.tracer.config.TracerConfiguration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.stereotype.Component;
 
 import java.util.TimeZone;
 
 @SpringBootApplication
-@ComponentScan(basePackages = { "org.egov.commonNotificationService","org.egov.commonNotificationService.service","org.egov.commonNotificationService.consumer"})
-@EntityScan("com.egov.commonNotificationService.models")
-@EnableJpaRepositories("com.egov.commonNotificationService.repository")
-@Import({ TracerConfiguration.class })
+@Component
+@Import(TracerConfiguration.class)
 public class CommonNotificationServiceApplication {
 
 	@Value("${app.timezone}")
