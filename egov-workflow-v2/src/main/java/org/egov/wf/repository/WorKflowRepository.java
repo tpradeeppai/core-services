@@ -39,9 +39,11 @@ public class WorKflowRepository {
      */
     public List<ProcessInstance> getProcessInstances(ProcessInstanceSearchCriteria criteria){
         List<ProcessInstance> processInstances = new LinkedList<>();
-        Set<String> businessIds = new HashSet<>(criteria.getBusinessIds());
+
+        Set<String> businessIds = new HashSet<>();
 
         if(!CollectionUtils.isEmpty(criteria.getBusinessIds())){
+            businessIds.addAll(criteria.getBusinessIds());
             for(String businessId : businessIds) {
                 List<Object> preparedStmtList = new ArrayList<>();
                 criteria.setBusinessIds(Collections.singletonList(businessId));
