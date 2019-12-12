@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,9 +41,23 @@ public class WorKflowRepository {
      * @return The parsed response from the search query
      */
     public List<ProcessInstance> getProcessInstances(ProcessInstanceSearchCriteria criteria){
-        List<Object> preparedStmtList = new ArrayList<>();
-        String query = queryBuilder.getProcessInstanceSearchQueryWithState(criteria, preparedStmtList);
-        return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
+        List<ProcessInstance> processInstances = new LinkedList<>();
+        List<String> businessIds = criteria.getBusinessIds();
+
+        if(!CollectionUtils.isEmpty(criteria.getBusinessIds())){
+            for(String businessId : businessIds) {
+                List<Object> preparedStmtList = new ArrayList<>();
+                criteria.setBusinessIds(Collections.singletonList(businessId));
+                String query = queryBuilder.getProcessInstanceSearchQueryWithState(criteria, preparedStmtList);
+                processInstances.addAll(jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper));
+            }
+        }
+        else{
+            List<Object> preparedStmtList = new ArrayList<>();
+            String query = queryBuilder.getProcessInstanceSearchQueryWithState(criteria, preparedStmtList);
+            processInstances =  jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
+        }
+        return processInstances;
     }
 
 
