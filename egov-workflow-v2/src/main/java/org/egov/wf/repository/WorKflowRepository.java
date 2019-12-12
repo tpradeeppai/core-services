@@ -11,10 +11,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Repository
 @Slf4j
@@ -42,7 +39,7 @@ public class WorKflowRepository {
      */
     public List<ProcessInstance> getProcessInstances(ProcessInstanceSearchCriteria criteria){
         List<ProcessInstance> processInstances = new LinkedList<>();
-        List<String> businessIds = criteria.getBusinessIds();
+        Set<String> businessIds = new HashSet<>(criteria.getBusinessIds());
 
         if(!CollectionUtils.isEmpty(criteria.getBusinessIds())){
             for(String businessId : businessIds) {
