@@ -1,6 +1,5 @@
 package org.egov;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.Utils.UserUtils;
 import org.egov.filters.pre.AuthFilter;
@@ -12,10 +11,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.kubernetes.discovery.KubernetesDiscoveryClientAutoConfiguration;
 import org.springframework.cloud.netflix.zuul.EnableZuulProxy;
 import org.springframework.cloud.netflix.zuul.filters.ProxyRequestHelper;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -23,8 +23,9 @@ import java.util.HashSet;
 
 @EnableZuulProxy
 @EnableCaching
-@SpringBootApplication
-@PropertySource("${zuul.routes.filepath}")
+@EnableDiscoveryClient
+@SpringBootApplication(exclude = KubernetesDiscoveryClientAutoConfiguration.class)
+//@PropertySource("${zuul.routes.filepath}")
 public class ZuulGatewayApplication {
     public static void main(String[] args) {
         SpringApplication.run(ZuulGatewayApplication.class, args);
