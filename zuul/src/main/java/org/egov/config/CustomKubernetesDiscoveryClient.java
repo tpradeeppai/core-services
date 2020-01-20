@@ -103,16 +103,18 @@ public class CustomKubernetesDiscoveryClient implements DiscoveryClient {
 
             final Service service = this.client.services().withName(serviceId).get();
 
-            if (log.isDebugEnabled()) {
-                log.debug("Adding label metadata: " + service.getMetadata().getLabels());
-            }
-            final Map<String, String> serviceMetadata = new HashMap<>(service.getMetadata().getLabels());
-
-                if (log.isDebugEnabled()) {
-                    log.debug("Adding annotation metadata: " + service.getMetadata().getAnnotations());
+            final Map<String, String> serviceMetadata = new HashMap<>();
+            if(service.getMetadata() != null) {
+                if(service.getMetadata().getLabels() != null) {
+                    log.debug("Adding label metadata");
+                    serviceMetadata.putAll(service.getMetadata().getLabels());
                 }
-                if(service.getMetadata().getAnnotations() != null)
+
+                if(service.getMetadata().getAnnotations() != null) {
+                    log.debug("Adding annotation metadata: ");
                     serviceMetadata.putAll(service.getMetadata().getAnnotations());
+                }
+            }
 
 
             for (EndpointSubset s : subsets) {
