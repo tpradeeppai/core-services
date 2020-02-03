@@ -59,13 +59,15 @@ public class EnrichmentService {
             }
             processStateAndAction.getProcessInstanceFromRequest().setAuditDetails(auditDetails);
             processStateAndAction.getProcessInstanceFromRequest().setAssigner(requestInfo.getUserInfo());
-            if(!CollectionUtils.isEmpty(processStateAndAction.getProcessInstanceFromRequest().getDocuments())){
-                processStateAndAction.getProcessInstanceFromRequest().getDocuments().forEach(document -> {
-                    document.setAuditDetails(auditDetails);
-                    document.setTenantId(tenantId);
-                    document.setId(UUID.randomUUID().toString());
-                });
-            }
+            if(processStateAndAction.getProcessInstanceFromRequest().getDocuments() != null){
+                if(!CollectionUtils.isEmpty(processStateAndAction.getProcessInstanceFromRequest().getDocuments())){
+                    processStateAndAction.getProcessInstanceFromRequest().getDocuments().forEach(document -> {
+                        document.setAuditDetails(auditDetails);
+                        document.setTenantId(tenantId);
+                        document.setId(UUID.randomUUID().toString());
+                    });
+                }
+            }            
             Action action = processStateAndAction.getAction();
             Boolean isStateChanging = (action.getCurrentState().equalsIgnoreCase( action.getNextState())) ? false : true;
             if(isStateChanging)
