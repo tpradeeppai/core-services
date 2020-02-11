@@ -78,10 +78,13 @@ public class User {
         this.roles.add(roleItem);
         return this;
     }
-
     public void validateNewUser() {
+        validateNewUser(true);
+    }
+
+    public void validateNewUser(boolean createUserValidateName) {
         if (isUsernameAbsent()
-                || isNameAbsent()
+                || (createUserValidateName && isNameAbsent())
                 || isMobileNumberAbsent()
                 || isActiveIndicatorAbsent()
                 || isTypeAbsent()
