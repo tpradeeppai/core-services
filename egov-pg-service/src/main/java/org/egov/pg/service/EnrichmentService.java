@@ -10,6 +10,7 @@ import org.egov.pg.models.Transaction;
 import org.egov.pg.repository.GatewayMetadata;
 import org.egov.pg.web.models.TransactionRequest;
 import org.egov.pg.web.models.User;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
@@ -44,6 +45,9 @@ public class EnrichmentService {
         String gateway = transaction.getGateway();
         String tenantId = transaction.getTenantId();
         String module = transaction.getModule();
+        if(gateway == null || tenantId==null || module==null){
+            throw new CustomException("TRANSACTION_DETAIL_MISSING","gateway or tenantId or module is missing");
+        }
 
         //Set metdata
         Map metaData = gatewayMetadata.metaData(requestInfo, gateway, tenantId,module);

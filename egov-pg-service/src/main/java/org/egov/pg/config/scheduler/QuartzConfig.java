@@ -41,7 +41,7 @@ public class QuartzConfig {
     }
 
     //     Uncomment for local dev run
-    @DependsOn("flywayInitializer")
+   // @DependsOn("flywayInitializer")
 
     @Bean
     SchedulerFactoryBean quartzScheduler() {
