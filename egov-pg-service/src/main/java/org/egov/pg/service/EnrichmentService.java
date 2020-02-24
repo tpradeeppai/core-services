@@ -5,11 +5,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.constants.PgConstants;
-import org.egov.pg.constants.TransactionAdditionalFields;
 import org.egov.pg.models.AuditDetails;
-import org.egov.pg.models.BankAccount;
 import org.egov.pg.models.Transaction;
-import org.egov.pg.repository.BankAccountRepository;
+import org.egov.pg.repository.GatewayMetadata;
 import org.egov.pg.web.models.TransactionRequest;
 import org.egov.pg.web.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Objects;
 
 import static java.util.Collections.singletonMap;
@@ -27,22 +26,28 @@ import static java.util.Collections.singletonMap;
 public class EnrichmentService {
 
     private IdGenService idGenService;
-    private BankAccountRepository bankAccountRepository;
     private ObjectMapper objectMapper;
+    private GatewayMetadata gatewayMetadata;
 
     @Autowired
-    EnrichmentService(IdGenService idGenService, BankAccountRepository bankAccountRepository, ObjectMapper objectMapper) {
+    EnrichmentService(IdGenService idGenService, ObjectMapper objectMapper,
+                      GatewayMetadata gatewayMetadata) {
         this.idGenService = idGenService;
-        this.bankAccountRepository = bankAccountRepository;
         this.objectMapper = objectMapper;
+        this.gatewayMetadata = gatewayMetadata;
     }
 
-    void enrichCreateTransaction(TransactionRequest transactionRequest) {
+    void enrichCreateTransaction(TransactionRequest transactionRequest) throws Exception {
         Transaction transaction = transactionRequest.getTransaction();
         RequestInfo requestInfo = transactionRequest.getRequestInfo();
 
-        BankAccount bankAccount = bankAccountRepository.getBankAccountsById(requestInfo, transaction.getTenantId());
-        transaction.setAdditionalFields(singletonMap(TransactionAdditionalFields.BANK_ACCOUNT_NUMBER, bankAccount.getAccountNumber()));
+        String gateway = transaction.getGateway();
+        String tenantId = transaction.getTenantId();
+        String module = transaction.getModule();
+
+        //Set metdata
+        Map metaData = gatewayMetadata.metaData(requestInfo, gateway, tenantId,module);
+        transaction.setMetaData(metaData);
 
         // Generate ID from ID Gen service and assign to txn object
         String txnId = idGenService.generateTxnId(transactionRequest);

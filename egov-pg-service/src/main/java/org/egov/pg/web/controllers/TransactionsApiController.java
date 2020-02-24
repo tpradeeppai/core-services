@@ -2,7 +2,10 @@ package org.egov.pg.web.controllers;
 
 
 import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.mdms.model.MdmsResponse;
 import org.egov.pg.models.Transaction;
+import org.egov.pg.repository.GatewayMetadata;
 import org.egov.pg.service.GatewayService;
 import org.egov.pg.service.TransactionService;
 import org.egov.pg.utils.ResponseInfoFactory;
@@ -14,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,13 +32,14 @@ public class TransactionsApiController {
 
     private final TransactionService transactionService;
     private final GatewayService gatewayService;
-
+    private final GatewayMetadata gatewayMetadata;
 
     @Autowired
     public TransactionsApiController(TransactionService transactionService, GatewayService
-            gatewayService) {
+            gatewayService, GatewayMetadata gatewayMetadata) {
         this.transactionService = transactionService;
         this.gatewayService = gatewayService;
+        this.gatewayMetadata = gatewayMetadata;
     }
 
 
@@ -45,7 +50,7 @@ public class TransactionsApiController {
      * @return Transaction that has been created
      */
     @RequestMapping(value = "/transaction/v1/_create", method = RequestMethod.POST)
-    public ResponseEntity<TransactionCreateResponse> transactionsV1CreatePost(@Valid @RequestBody TransactionRequest transactionRequest) {
+    public ResponseEntity<TransactionCreateResponse> transactionsV1CreatePost(@Valid @RequestBody TransactionRequest transactionRequest) throws Exception {
 
         Transaction transaction = transactionService.initiateTransaction(transactionRequest);
         ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestInfo(transactionRequest
@@ -104,11 +109,17 @@ public class TransactionsApiController {
      * @return list of active gateways that can be used for payments
      */
     @RequestMapping(value = "/gateway/v1/_search", method = RequestMethod.POST)
-    public ResponseEntity<Set<String>> transactionsV1AvailableGatewaysPost() {
+    public ResponseEntity<List> transactionsV1AvailableGatewaysPost(@RequestBody TransactionRequest transactionRequest) throws Exception {
+        Transaction transaction = transactionRequest.getTransaction();
+        RequestInfo requestInfo = transactionRequest.getRequestInfo();
+        String tenantId = transaction.getTenantId();
 
-        Set<String> gateways = gatewayService.getActiveGateways();
-        log.debug("Available gateways : " + gateways);
-        return new ResponseEntity<>(gateways, HttpStatus.OK);
+        List listOfGateway = gatewayMetadata.listOfGateways(requestInfo,tenantId);
+
+        return new ResponseEntity<>(listOfGateway,HttpStatus.OK);
+    //    Set<String> gateways = gatewayService.getActiveGateways();
+     //   log.debug("Available gateways : " + gateways);
+     //   return new ResponseEntity<>(gateways, HttpStatus.OK);
     }
 
 }

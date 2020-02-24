@@ -67,7 +67,7 @@ public class TransactionService {
      * @param transactionRequest Valid transaction request for which transaction needs to be initiated
      * @return Redirect URI to the gateway for the particular transaction
      */
-    public Transaction initiateTransaction(TransactionRequest transactionRequest) {
+    public Transaction initiateTransaction(TransactionRequest transactionRequest) throws Exception {
         validator.validateCreateTxn(transactionRequest);
 
         // Enrich transaction by generating txnid, audit details, default status

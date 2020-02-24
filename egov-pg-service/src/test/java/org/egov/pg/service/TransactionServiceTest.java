@@ -62,7 +62,7 @@ public class TransactionServiceTest {
     private RequestInfo requestInfo;
 
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         user = User.builder().userName("USER001").mobileNumber("9XXXXXXXXX").name("XYZ").tenantId("pb").emailId("").build();
         requestInfo = new RequestInfo("", "", 0L, "", "", "", "", "", "", null);
 
@@ -85,7 +85,7 @@ public class TransactionServiceTest {
      */
 
     @Test
-    public void initiateTransactionSuccessTest() throws URISyntaxException {
+    public void initiateTransactionSuccessTest() throws Exception {
         String redirectUrl = "https://paytm.com";
 
 
@@ -110,7 +110,7 @@ public class TransactionServiceTest {
      * Test for invalid or inactive gateway
      */
     @Test(expected = CustomException.class)
-    public void initiateTransactionFailTest(){
+    public void initiateTransactionFailTest() throws Exception {
         Transaction txn = Transaction.builder().txnAmount("100")
                 .billId("ORDER0012")
                 .productInfo("Property Tax Payment")
@@ -129,7 +129,7 @@ public class TransactionServiceTest {
      * Test for invalid or inactive gateway
      */
     @Test
-    public void initiateTransactionSkipGatewayTest(){
+    public void initiateTransactionSkipGatewayTest() throws Exception {
         String receiptNumber = "XYZ";
         Transaction txn = Transaction.builder().txnAmount("100")
                 .billId("ORDER0012")

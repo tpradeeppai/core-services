@@ -169,6 +169,10 @@ public class Transaction {
     @JsonIgnore
     private Map<TransactionAdditionalFields, Object> additionalFields;
 
+    //Metdata for payment gateway
+    @JsonIgnore
+    private Map metaData;
+
 
     /**
      * Current status of the transaction
