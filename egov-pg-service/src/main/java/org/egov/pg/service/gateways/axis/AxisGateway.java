@@ -51,6 +51,8 @@ public class AxisGateway implements Gateway {
     private final String LOCALE;
     private final String CURRENCY;
 
+    private  String BANK_ACCOUNT_NUMBER;
+
     private final RestTemplate restTemplate;
     private ObjectMapper objectMapper;
 
@@ -67,6 +69,9 @@ public class AxisGateway implements Gateway {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
 
+
+
+
         ACTIVE = Boolean.valueOf(environment.getRequiredProperty("axis.active"));
         CURRENCY = environment.getRequiredProperty("axis.currency");
         LOCALE = environment.getRequiredProperty("axis.locale");
@@ -80,14 +85,15 @@ public class AxisGateway implements Gateway {
         VPC_COMMAND_STATUS = environment.getRequiredProperty("axis.merchant.vpc.command.status");
         MERCHANT_URL_PAY = environment.getRequiredProperty("axis.url.debit");
         MERCHANT_URL_STATUS = environment.getRequiredProperty("axis.url.status");
+        // BANK_ACCOUNT_NUMBER = bankAccountNumber;
     }
 
     @Override
     public URI generateRedirectURI(Transaction transaction) {
 
         Map metaData = transaction.getMetaData();
-        String BANK_ACCOUNT_NUMBER = (String)metaData.get("accountNumber");
-
+        String bankAccountNumber = (String)metaData.get("accountNumber");
+        BANK_ACCOUNT_NUMBER = bankAccountNumber;
         Map<String, String> fields = new HashMap<>();
         fields.put("vpc_Version", VPC_VERSION);
         fields.put("vpc_Command", VPC_COMMAND_PAY);
@@ -98,7 +104,7 @@ public class AxisGateway implements Gateway {
         fields.put("vpc_ReturnURL", transaction.getCallbackUrl());
         fields.put("vpc_MerchTxnRef", transaction.getTxnId());
         //takes account number from metdata
-        fields.put("vpc_OrderInfo", BANK_ACCOUNT_NUMBER);
+        fields.put("vpc_OrderInfo", (String)BANK_ACCOUNT_NUMBER);
         fields.put("vpc_Amount", String.valueOf(Utils.formatAmtAsPaise(transaction.getTxnAmount())));
 
         String secureHash = AxisUtils.SHAhashAllFields(fields, SECURE_SECRET);

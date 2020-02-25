@@ -37,10 +37,6 @@ public class AppProperties {
 
     private final String collectionServiceValidatePath;
 
-    private final String bankAccountHost;
-
-    private final String bankAccountPath;
-
     private final String mdmsHost;
 
     private final String mdmsPath;
@@ -61,8 +57,6 @@ public class AppProperties {
         this.collectionServiceHost = environment.getRequiredProperty("egov.collectionservice.host");
         this.collectionServiceCreatePath = environment.getRequiredProperty("egov.collectionservice.create.path");
         this.collectionServiceValidatePath = environment.getRequiredProperty("egov.collectionservice.validate.path");
-        this.bankAccountHost = environment.getRequiredProperty("egov.bankaccountservice.host");
-        this.bankAccountPath = environment.getRequiredProperty("egov.bankaccountservice.path");
         this.mdmsHost = environment.getRequiredProperty("egov.mdms.host");
         this.mdmsPath = environment.getRequiredProperty("egov.mdms.path");
     }

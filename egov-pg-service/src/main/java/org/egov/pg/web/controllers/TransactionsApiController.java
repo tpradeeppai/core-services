@@ -109,15 +109,14 @@ public class TransactionsApiController {
      * @return list of active gateways that can be used for payments
      */
     @RequestMapping(value = "/gateway/v1/_search", method = RequestMethod.POST)
-    public ResponseEntity<List> transactionsV1AvailableGatewaysPost(@RequestBody RequestInfoWrapper
-                                                                                requestInfoWrapper,TransactionRequest transactionRequest) throws Exception {
+    public ResponseEntity<List> transactionsV1AvailableGatewaysPost(@RequestBody TransactionRequest transactionRequest) throws Exception {
         Transaction transaction = transactionRequest.getTransaction();
         RequestInfo requestInfo = transactionRequest.getRequestInfo();
-        ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper
-                .getRequestInfo(), true);
+    //    ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper
+     //           .getRequestInfo(), true);
         String tenantId = transaction.getTenantId();
         List listOfGateway = gatewayMetadata.listOfGateways(requestInfo,tenantId);
-        TransactionResponse response = new TransactionResponse(responseInfo, listOfGateway);
+     //   TransactionResponse response = new TransactionResponse(responseInfo, listOfGateway);
         return new ResponseEntity<>(listOfGateway,HttpStatus.OK);
     }
 

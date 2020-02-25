@@ -98,11 +98,16 @@ public class GatewayMetadata {
         } catch (Exception e) {
             throw new Exception("METADATA_FETCH_ERROR", e);
         }
-        if (result.size() > 1) {
-            log.error( "Expected to find one gateway for tenant " +
+        if (result.size() > 1 && gateway.equals(GATEWAY_DEFAULT)) {
+            log.error( "Expected to find one default gateway for tenant " +
                     "{}, instead found {}", tenantId, result.size());
             throw new CustomException("GATEWAY_CONFIG_ERROR","More than one default enabled");
-        }else if(result== null){
+        }else if(result.size() > 1){
+            log.error( "Expected to find one gateway for tenant " +
+                    "{}, instead found {}", tenantId, result.size());
+            throw new CustomException("GATEWAY_CONFIG_ERROR","More than one gateway definition present");
+        }
+        else if(result== null){
             log.error("No gateway is enabled");
             throw new CustomException("GATEWAY_CONFIG_ERROR","No enabled gateway exists");
         }else{
