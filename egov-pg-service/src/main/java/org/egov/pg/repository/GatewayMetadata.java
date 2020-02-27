@@ -28,6 +28,7 @@ public class GatewayMetadata {
     public static final String GATEWAY_ENABLED = "enabled";
     private AppProperties appProperties;
     private RestTemplate restTemplate;
+
     @Autowired
     public GatewayMetadata(AppProperties appProperties, RestTemplate restTemplate) {
         this.appProperties = appProperties;
