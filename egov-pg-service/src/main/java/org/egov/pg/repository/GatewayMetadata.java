@@ -28,8 +28,8 @@ public class GatewayMetadata {
         this.restTemplate = restTemplate;
     }
 
-    public static final String MDMS_PAYMENT_GATEWAY = "PaymentGateway";
-    public static final String TENANT_GATEWAY_DETAILS = "gateways";
+    public static final String MDMS_PAYMENT_GATEWAY_MODULE = "PaymentGateway";
+    public static final String MDMS_GATEWAY_MASTER = "gateways";
     public static final String MDMS_RESPONSE = "MdmsRes";
     public static final String GATEWAY_DETAILS = "serviceOverride";
     public static final String GATEWAY_NAME = "code";
@@ -37,16 +37,14 @@ public class GatewayMetadata {
     public static final String GATEWAY_ENABLED = "enabled";
 
 
-
-
     private MdmsCriteriaReq getMDMSRequest(RequestInfo requestInfo, String tenantId) {
         List<MasterDetail> paymentGatewayDetails = new ArrayList<>();
 
 
-        paymentGatewayDetails.add(MasterDetail.builder().name(TENANT_GATEWAY_DETAILS).build());
+        paymentGatewayDetails.add(MasterDetail.builder().name(MDMS_GATEWAY_MASTER).build());
 
         ModuleDetail gatewayModuledetls = ModuleDetail.builder().masterDetails(paymentGatewayDetails)
-                .moduleName(MDMS_PAYMENT_GATEWAY).build();
+                .moduleName(MDMS_PAYMENT_GATEWAY_MODULE).build();
 
 
         List<ModuleDetail> moduleDetails = new LinkedList<>();
@@ -72,24 +70,33 @@ public class GatewayMetadata {
         Map gatewayData = mDMSCall(requestInfo, tenantId);
 
         List gatewayDetails = (List) ((HashMap) ((HashMap) gatewayData.get(MDMS_RESPONSE))
-                .get(MDMS_PAYMENT_GATEWAY)).get(TENANT_GATEWAY_DETAILS);
+                .get(MDMS_PAYMENT_GATEWAY_MODULE)).get(MDMS_GATEWAY_MASTER);
         Map result = new HashMap();
         try {
             for (int i = 0; i < gatewayDetails.size(); i++) {
                 //if default gateway is needed
                 if (gateway.equals(GATEWAY_DEFAULT) && ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DEFAULT).equals(true)
                         && ((HashMap) gatewayDetails.get(i)).get(GATEWAY_ENABLED).equals(true)) {
-                    result.put(gateway, ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get("*"));
-                    if (((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).containsKey(module)) {
-                        result.putAll(((HashMap) ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get(module)));
+                    if (!((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).isEmpty()) {
+                        result.put(gateway, ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get("*"));
+
+                        if (((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).containsKey(module)) {
+                            result.putAll(((HashMap) ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get(module)));
+                        }
+                    } else {
+                        result.put(gateway, null);
                     }
+
 
                 } else if (((HashMap) gatewayDetails.get(i)).get(GATEWAY_NAME).equals(gateway) && ((HashMap) gatewayDetails.get(i)).get(GATEWAY_ENABLED).equals(true)) {
+                    if (!((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).isEmpty()) {
+                        result.put(gateway, ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get("*"));
 
-                    result.put(gateway, ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get("*"));
-                    if (((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).containsKey(module)) {
-                        result.putAll(((HashMap) ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get(module)));
+                        if (((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).containsKey(module)) {
+                            result.putAll(((HashMap) ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get(module)));
+                        }
                     }
+
 
                 }
 
@@ -99,19 +106,18 @@ public class GatewayMetadata {
             throw new Exception("METADATA_FETCH_ERROR", e);
         }
         if (result.size() > 1 && gateway.equals(GATEWAY_DEFAULT)) {
-            log.error( "Expected to find one default gateway for tenant " +
+            log.error("Expected to find one default gateway for tenant " +
                     "{}, instead found {}", tenantId, result.size());
-            throw new CustomException("GATEWAY_CONFIG_ERROR","More than one default enabled");
-        }else if(result.size() > 1){
-            log.error( "Expected to find one gateway for tenant " +
+            throw new CustomException("GATEWAY_CONFIG_ERROR", "More than one default enabled");
+        } else if (result.size() > 1) {
+            log.error("Expected to find one gateway for tenant " +
                     "{}, instead found {}", tenantId, result.size());
-            throw new CustomException("GATEWAY_CONFIG_ERROR","More than one gateway definition present");
-        }
-        else if(result== null){
+            throw new CustomException("GATEWAY_CONFIG_ERROR", "More than one gateway definition present");
+        } else if (result == null) {
             log.error("No gateway is enabled");
-            throw new CustomException("GATEWAY_CONFIG_ERROR","No enabled gateway exists");
-        }else{
-            log.info("metaData",result);
+            throw new CustomException("GATEWAY_CONFIG_ERROR", "No enabled gateway exists");
+        } else {
+            log.info("metaData", result);
             return result;
         }
 
@@ -119,14 +125,14 @@ public class GatewayMetadata {
 
 
     //Gives list of all enabled gateways
-    public List listOfGateways(RequestInfo requestInfo, String tenantId) throws Exception {
+    public LinkedList listOfGateways(RequestInfo requestInfo, String tenantId) throws Exception {
 
         HashMap gatewayData = mDMSCall(requestInfo, tenantId);
         List paymentGateways = (List) ((HashMap) ((HashMap) gatewayData.get(MDMS_RESPONSE))
-                .get(MDMS_PAYMENT_GATEWAY)).get(TENANT_GATEWAY_DETAILS);
-        List enabledGateways = new LinkedList();
+                .get(MDMS_PAYMENT_GATEWAY_MODULE)).get(MDMS_GATEWAY_MASTER);
+        LinkedList enabledGateways = new LinkedList();
 
-        try{
+        try {
             for (int i = 0; i < paymentGateways.size(); i++) {
                 ((HashMap) paymentGateways.get(i)).remove(GATEWAY_DETAILS);
             }
@@ -136,13 +142,13 @@ public class GatewayMetadata {
                     enabledGateways.add(((HashMap) paymentGateways.get(i)));
                 }
             }
-        }catch(Exception e){
-            throw new Exception("GATEWAY_SEARCH_ERROR",e);
+        } catch (Exception e) {
+            throw new Exception("GATEWAY_SEARCH_ERROR", e);
         }
-        if(enabledGateways == null){
+        if (enabledGateways == null) {
             log.error("NO enabled gateways exist");
-            throw new CustomException("GATEWAY_CONFIG_ERROR","No enabled gateway exists");
-        }else{
+            throw new CustomException("GATEWAY_CONFIG_ERROR", "No enabled gateway exists");
+        } else {
             return enabledGateways;
         }
     }

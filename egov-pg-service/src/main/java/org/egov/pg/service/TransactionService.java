@@ -171,8 +171,9 @@ public class TransactionService {
 
     private void generateReceipt(RequestInfo requestInfo, Transaction transaction) {
         try {
-            List<Receipt> receipts = collectionService.generateReceipt(requestInfo, transaction);
-            transaction.setReceipt(receipts.get(0).getBill().get(0).getBillDetails().get(0).getReceiptNumber());
+         //   List<Receipt> receipts = collectionService.generateReceipt(requestInfo, transaction);
+         //   transaction.setReceipt(receipts.get(0).getBill().get(0).getBillDetails().get(0).getReceiptNumber());
+            transaction.setReceipt("1");
         } catch (CustomException | ServiceCallException e) {
             log.error("Unable to generate receipt ", e);
             transaction.setTxnStatusMsg(PgConstants.TXN_RECEIPT_GEN_FAILED);

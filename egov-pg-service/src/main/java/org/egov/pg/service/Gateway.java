@@ -1,5 +1,6 @@
 package org.egov.pg.service;
 
+import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
 
 import java.net.URI;

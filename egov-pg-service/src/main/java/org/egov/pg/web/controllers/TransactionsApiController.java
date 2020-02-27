@@ -11,16 +11,14 @@ import org.egov.pg.service.TransactionService;
 import org.egov.pg.utils.ResponseInfoFactory;
 import org.egov.pg.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Endpoints to deal with all payment related operations
@@ -109,15 +107,15 @@ public class TransactionsApiController {
      * @return list of active gateways that can be used for payments
      */
     @RequestMapping(value = "/gateway/v1/_search", method = RequestMethod.POST)
-    public ResponseEntity<List> transactionsV1AvailableGatewaysPost(@RequestBody TransactionRequest transactionRequest) throws Exception {
+    public ResponseEntity<GatewayResponse> transactionsV1AvailableGatewaysPost(@Valid @RequestBody TransactionRequest transactionRequest) throws Exception {
         Transaction transaction = transactionRequest.getTransaction();
         RequestInfo requestInfo = transactionRequest.getRequestInfo();
-    //    ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestInfo(requestInfoWrapper
-     //           .getRequestInfo(), true);
+        ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestInfo(transactionRequest
+                .getRequestInfo(), true);
         String tenantId = transaction.getTenantId();
-        List listOfGateway = gatewayMetadata.listOfGateways(requestInfo,tenantId);
-     //   TransactionResponse response = new TransactionResponse(responseInfo, listOfGateway);
-        return new ResponseEntity<>(listOfGateway,HttpStatus.OK);
+        LinkedList listOfGateway = gatewayMetadata.listOfGateways(requestInfo,tenantId);
+        GatewayResponse response = new GatewayResponse(responseInfo, listOfGateway);
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
 }

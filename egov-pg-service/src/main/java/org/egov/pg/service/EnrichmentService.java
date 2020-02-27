@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.constants.PgConstants;
 import org.egov.pg.models.AuditDetails;
+import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.repository.GatewayMetadata;
 import org.egov.pg.web.models.TransactionRequest;
@@ -17,6 +18,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -45,13 +47,16 @@ public class EnrichmentService {
         String gateway = transaction.getGateway();
         String tenantId = transaction.getTenantId();
         String module = transaction.getModule();
+
         if(gateway == null || tenantId==null || module==null){
             throw new CustomException("TRANSACTION_DETAIL_MISSING","gateway or tenantId or module is missing");
         }
 
         //Set metdata
         Map metaData = gatewayMetadata.metaData(requestInfo, gateway, tenantId,module);
-        transaction.setMetaData(metaData);
+        GatewayParams gatewayParams = null;
+        gatewayParams.setMetaData(metaData);
+       // transaction.setMetaData(metaData);
 
         // Generate ID from ID Gen service and assign to txn object
         String txnId = idGenService.generateTxnId(transactionRequest);

@@ -2,6 +2,7 @@ package org.egov.pg.service.gateways.axis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.service.Gateway;
 import org.egov.pg.utils.Utils;
@@ -65,13 +66,13 @@ public class AxisGateway implements Gateway {
      * @param environment containing all required config parameters
      */
     @Autowired
-    public AxisGateway(RestTemplate restTemplate, Environment environment, ObjectMapper objectMapper) {
+    public AxisGateway(RestTemplate restTemplate, Environment environment, ObjectMapper objectMapper, GatewayParams gatewayParams) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
 
+        Map metaData = gatewayParams.getMetaData();
 
-
-
+        BANK_ACCOUNT_NUMBER = (String)metaData.get("accountNumber");
         ACTIVE = Boolean.valueOf(environment.getRequiredProperty("axis.active"));
         CURRENCY = environment.getRequiredProperty("axis.currency");
         LOCALE = environment.getRequiredProperty("axis.locale");
@@ -85,15 +86,11 @@ public class AxisGateway implements Gateway {
         VPC_COMMAND_STATUS = environment.getRequiredProperty("axis.merchant.vpc.command.status");
         MERCHANT_URL_PAY = environment.getRequiredProperty("axis.url.debit");
         MERCHANT_URL_STATUS = environment.getRequiredProperty("axis.url.status");
-        // BANK_ACCOUNT_NUMBER = bankAccountNumber;
     }
 
     @Override
     public URI generateRedirectURI(Transaction transaction) {
 
-        Map metaData = transaction.getMetaData();
-        String bankAccountNumber = (String)metaData.get("accountNumber");
-        BANK_ACCOUNT_NUMBER = bankAccountNumber;
         Map<String, String> fields = new HashMap<>();
         fields.put("vpc_Version", VPC_VERSION);
         fields.put("vpc_Command", VPC_COMMAND_PAY);
