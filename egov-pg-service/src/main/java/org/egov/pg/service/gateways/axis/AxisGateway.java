@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static org.egov.pg.constants.TransactionAdditionalFields.BANK_ACCOUNT_NUMBER;
-
 /**
  * AXIS Gateway implementation
  */
@@ -51,28 +49,22 @@ public class AxisGateway implements Gateway {
 
     private final String LOCALE;
     private final String CURRENCY;
-
-    private  String BANK_ACCOUNT_NUMBER;
-
     private final RestTemplate restTemplate;
-    private ObjectMapper objectMapper;
-
     private final boolean ACTIVE;
+    private String BANK_ACCOUNT_NUMBER;
+    private ObjectMapper objectMapper;
 
     /**
      * Initialize by populating all required config parameters
      *
      * @param restTemplate rest template instance to be used to make REST calls
-     * @param environment containing all required config parameters
+     * @param environment  containing all required config parameters
      */
     @Autowired
-    public AxisGateway(RestTemplate restTemplate, Environment environment, ObjectMapper objectMapper, GatewayParams gatewayParams) {
+    public AxisGateway(RestTemplate restTemplate, Environment environment, ObjectMapper objectMapper) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
 
-        Map metaData = gatewayParams.getMetaData();
-
-        BANK_ACCOUNT_NUMBER = (String)metaData.get("accountNumber");
         ACTIVE = Boolean.valueOf(environment.getRequiredProperty("axis.active"));
         CURRENCY = environment.getRequiredProperty("axis.currency");
         LOCALE = environment.getRequiredProperty("axis.locale");
@@ -89,7 +81,12 @@ public class AxisGateway implements Gateway {
     }
 
     @Override
-    public URI generateRedirectURI(Transaction transaction) {
+    public URI generateRedirectURI(Transaction transaction, GatewayParams gatewayParams) {
+
+
+        Map metaData = gatewayParams.getMetaData();
+
+        BANK_ACCOUNT_NUMBER = (String) metaData.get("accountNumber");
 
         Map<String, String> fields = new HashMap<>();
         fields.put("vpc_Version", VPC_VERSION);
@@ -101,7 +98,7 @@ public class AxisGateway implements Gateway {
         fields.put("vpc_ReturnURL", transaction.getCallbackUrl());
         fields.put("vpc_MerchTxnRef", transaction.getTxnId());
         //takes account number from metdata
-        fields.put("vpc_OrderInfo", (String)BANK_ACCOUNT_NUMBER);
+        fields.put("vpc_OrderInfo", (String) BANK_ACCOUNT_NUMBER);
         fields.put("vpc_Amount", String.valueOf(Utils.formatAmtAsPaise(transaction.getTxnAmount())));
 
         String secureHash = AxisUtils.SHAhashAllFields(fields, SECURE_SECRET);
@@ -159,7 +156,7 @@ public class AxisGateway implements Gateway {
         Map<String, String> fields = new HashMap<>();
 
         String txnRef = StringUtils.isEmpty(currentStatus.getModule()) ? currentStatus.getTxnId() :
-                currentStatus.getModule() + "-" +currentStatus.getTxnId();
+                currentStatus.getModule() + "-" + currentStatus.getTxnId();
 
         fields.put("vpc_Version", VPC_VERSION);
         fields.put("vpc_Command", VPC_COMMAND_STATUS);
@@ -185,8 +182,8 @@ public class AxisGateway implements Gateway {
             log.info(responseParams.toString());
 
             return transformRawResponse(responseParams, currentStatus);
-        }catch (RestClientException e){
-            log.error("Unable to fetch status from payment gateway for txnid: "+ currentStatus.getTxnId(), e);
+        } catch (RestClientException e) {
+            log.error("Unable to fetch status from payment gateway for txnid: " + currentStatus.getTxnId(), e);
             throw new ServiceCallException("Error occurred while fetching status from payment gateway");
         }
     }
@@ -198,7 +195,7 @@ public class AxisGateway implements Gateway {
 
         String respMsg = "";
         List<String> respCodeList = resp.get("vpc_TxnResponseCode");
-        if(Objects.isNull(respCodeList) || respCodeList.isEmpty()){
+        if (Objects.isNull(respCodeList) || respCodeList.isEmpty()) {
             log.error("Transaction not found in the payment gateway");
             return currentStatus;
         }

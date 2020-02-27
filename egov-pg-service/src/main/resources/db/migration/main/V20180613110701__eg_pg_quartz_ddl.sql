@@ -1,4 +1,3 @@
-
 DROP TABLE IF EXISTS  eg_pg_qrtz_fired_triggers;
 DROP TABLE IF EXISTS  eg_pg_qrtz_PAUSED_TRIGGER_GRPS;
 DROP TABLE IF EXISTS  eg_pg_qrtz_SCHEDULER_STATE;

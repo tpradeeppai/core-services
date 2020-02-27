@@ -22,7 +22,7 @@ public class AppProperties {
     private final String saveTxnDumpTopic;
 
     private final String updateTxnDumpTopic;
-    
+
     private final String idGenHost;
 
     private final String idGenPath;
@@ -42,9 +42,8 @@ public class AppProperties {
     private final String mdmsPath;
 
 
-
     @Autowired
-    public AppProperties(Environment environment){
+    public AppProperties(Environment environment) {
         this.earlyReconcileJobRunInterval = Integer.valueOf(environment.getRequiredProperty("pg.earlyReconcileJobRunInterval.mins"));
         this.saveTxnTopic = environment.getRequiredProperty("persister.save.pg.txns");
         this.updateTxnTopic = environment.getRequiredProperty("persister.update.pg.txns");

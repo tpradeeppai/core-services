@@ -2,7 +2,6 @@ package org.egov.pg.web.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
-
 import org.springframework.validation.annotation.Validated;
 
 import javax.validation.Valid;

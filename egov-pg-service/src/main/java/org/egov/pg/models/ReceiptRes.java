@@ -13,12 +13,12 @@ import java.util.List;
 @Getter
 @ToString
 @AllArgsConstructor
-public class ReceiptRes   {
+public class ReceiptRes {
 
-  @JsonProperty("ResponseInfo")
-  private ResponseInfo responseInfo;
-  
-  @JsonProperty("Receipt")
-  private List<Receipt> receipts;
-  
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+
+    @JsonProperty("Receipt")
+    private List<Receipt> receipts;
+
 }

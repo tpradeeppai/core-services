@@ -1,4 +1,5 @@
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.service.Gateway;
 import org.egov.pg.service.gateways.axis.AxisGateway;
@@ -24,6 +25,7 @@ public class Test {
     private ObjectMapper objectMapper;
     private RestTemplate restTemplate;
     private Environment environment;
+    private GatewayParams gatewayParams;
 
     @Before
     public void setUp() {
@@ -31,6 +33,7 @@ public class Test {
         this.restTemplate = new RestTemplate();
         this.objectMapper = new ObjectMapper();
         this.environment = new MockEnvironment();
+        this.gatewayParams = new GatewayParams();
     }
 
     @org.junit.Test
@@ -44,7 +47,7 @@ public class Test {
                 .user(user).build();
 
         Gateway gateway = new AxisGateway(restTemplate, environment, objectMapper);
-        URI redirectUri = gateway.generateRedirectURI(txn);
+        URI redirectUri = gateway.generateRedirectURI(txn, gatewayParams);
         System.out.println(redirectUri.toString());
 
     }
@@ -62,7 +65,7 @@ public class Test {
 
         Gateway gateway = new PhonepeGateway(restTemplate, objectMapper, environment);
 
-        URI redirectUri = gateway.generateRedirectURI(txn);
+        URI redirectUri = gateway.generateRedirectURI(txn, gatewayParams);
         System.out.println(redirectUri);
     }
 
@@ -76,9 +79,9 @@ public class Test {
                 .user(user).build();
 
 
-        Gateway gateway = new PaytmGateway(restTemplate,  environment);
+        Gateway gateway = new PaytmGateway(restTemplate, environment);
 
-        URI redirectUri = gateway.generateRedirectURI(txn);
+        URI redirectUri = gateway.generateRedirectURI(txn, gatewayParams);
         System.out.println(redirectUri);
     }
 

@@ -92,7 +92,6 @@ public class Transaction {
 
     /**
      * Callback URL to which control has to be redirected to by payment gateway
-     *
      */
     @JsonProperty("callbackUrl")
     @NotNull

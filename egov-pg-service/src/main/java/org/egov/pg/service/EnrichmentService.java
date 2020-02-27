@@ -18,7 +18,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
@@ -48,15 +47,15 @@ public class EnrichmentService {
         String tenantId = transaction.getTenantId();
         String module = transaction.getModule();
 
-        if(gateway == null || tenantId==null || module==null){
-            throw new CustomException("TRANSACTION_DETAIL_MISSING","gateway or tenantId or module is missing");
+        if (gateway == null || tenantId == null || module == null) {
+            throw new CustomException("TRANSACTION_DETAIL_MISSING", "gateway or tenantId or module is missing");
         }
 
         //Set metdata
-        Map metaData = gatewayMetadata.metaData(requestInfo, gateway, tenantId,module);
-        GatewayParams gatewayParams = null;
+        Map metaData = gatewayMetadata.metaData(requestInfo, gateway, tenantId, module);
+        GatewayParams gatewayParams = new GatewayParams();
         gatewayParams.setMetaData(metaData);
-       // transaction.setMetaData(metaData);
+        // transaction.setMetaData(metaData);
 
         // Generate ID from ID Gen service and assign to txn object
         String txnId = idGenService.generateTxnId(transactionRequest);
@@ -65,7 +64,7 @@ public class EnrichmentService {
         transaction.setTxnStatus(Transaction.TxnStatusEnum.PENDING);
         transaction.setTxnStatusMsg(PgConstants.TXN_INITIATED);
 
-        if(Objects.isNull(transaction.getAdditionalDetails()))
+        if (Objects.isNull(transaction.getAdditionalDetails()))
             transaction.setAdditionalDetails(objectMapper.createObjectNode());
 
         ((ObjectNode) transaction.getAdditionalDetails()).set("taxAndPayments",

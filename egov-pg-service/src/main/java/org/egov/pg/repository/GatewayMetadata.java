@@ -19,15 +19,6 @@ import java.util.*;
 @Repository
 public class GatewayMetadata {
 
-    private AppProperties appProperties;
-    private RestTemplate restTemplate;
-
-    @Autowired
-    public GatewayMetadata(AppProperties appProperties, RestTemplate restTemplate) {
-        this.appProperties = appProperties;
-        this.restTemplate = restTemplate;
-    }
-
     public static final String MDMS_PAYMENT_GATEWAY_MODULE = "PaymentGateway";
     public static final String MDMS_GATEWAY_MASTER = "gateways";
     public static final String MDMS_RESPONSE = "MdmsRes";
@@ -35,7 +26,13 @@ public class GatewayMetadata {
     public static final String GATEWAY_NAME = "code";
     public static final String GATEWAY_DEFAULT = "default";
     public static final String GATEWAY_ENABLED = "enabled";
-
+    private AppProperties appProperties;
+    private RestTemplate restTemplate;
+    @Autowired
+    public GatewayMetadata(AppProperties appProperties, RestTemplate restTemplate) {
+        this.appProperties = appProperties;
+        this.restTemplate = restTemplate;
+    }
 
     private MdmsCriteriaReq getMDMSRequest(RequestInfo requestInfo, String tenantId) {
         List<MasterDetail> paymentGatewayDetails = new ArrayList<>();
@@ -68,7 +65,6 @@ public class GatewayMetadata {
     //returns metData for gateway, tenant,module
     public Map metaData(RequestInfo requestInfo, String gateway, String tenantId, String module) throws Exception {
         Map gatewayData = mDMSCall(requestInfo, tenantId);
-
         List gatewayDetails = (List) ((HashMap) ((HashMap) gatewayData.get(MDMS_RESPONSE))
                 .get(MDMS_PAYMENT_GATEWAY_MODULE)).get(MDMS_GATEWAY_MASTER);
         Map result = new HashMap();
@@ -93,7 +89,7 @@ public class GatewayMetadata {
                         result.put(gateway, ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get("*"));
 
                         if (((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).containsKey(module)) {
-                            result.putAll(((HashMap) ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get(module)));
+                            ((HashMap) result.get(gateway)).putAll(((HashMap) ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get(module)));
                         }
                     }
 
@@ -130,6 +126,7 @@ public class GatewayMetadata {
         HashMap gatewayData = mDMSCall(requestInfo, tenantId);
         List paymentGateways = (List) ((HashMap) ((HashMap) gatewayData.get(MDMS_RESPONSE))
                 .get(MDMS_PAYMENT_GATEWAY_MODULE)).get(MDMS_GATEWAY_MASTER);
+
         LinkedList enabledGateways = new LinkedList();
 
         try {

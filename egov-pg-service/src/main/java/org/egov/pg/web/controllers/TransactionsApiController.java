@@ -3,7 +3,6 @@ package org.egov.pg.web.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.mdms.model.MdmsResponse;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.repository.GatewayMetadata;
 import org.egov.pg.service.GatewayService;
@@ -11,14 +10,15 @@ import org.egov.pg.service.TransactionService;
 import org.egov.pg.utils.ResponseInfoFactory;
 import org.egov.pg.web.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Endpoints to deal with all payment related operations
@@ -85,7 +85,7 @@ public class TransactionsApiController {
     /**
      * Updates the status of the transaction from the gateway
      *
-     * @param params             Parameters posted by the gateway
+     * @param params Parameters posted by the gateway
      * @return The current transaction status of the transaction
      */
     @RequestMapping(value = "/transaction/v1/_update", method = {RequestMethod.POST, RequestMethod.GET})
@@ -113,9 +113,9 @@ public class TransactionsApiController {
         ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestInfo(transactionRequest
                 .getRequestInfo(), true);
         String tenantId = transaction.getTenantId();
-        LinkedList listOfGateway = gatewayMetadata.listOfGateways(requestInfo,tenantId);
+        LinkedList listOfGateway = gatewayMetadata.listOfGateways(requestInfo, tenantId);
         GatewayResponse response = new GatewayResponse(responseInfo, listOfGateway);
-        return new ResponseEntity<>(response,HttpStatus.OK);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }

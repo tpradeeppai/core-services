@@ -2,6 +2,7 @@ package org.egov.pg.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.pg.constants.PgConstants;
+import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.GatewayStatus;
 import org.egov.pg.models.Transaction;
 import org.egov.tracer.model.CustomException;
@@ -65,12 +66,12 @@ public class GatewayService {
      * @param transaction Txn for which payment should be initiated
      * @return Redirect URI to the gateway
      */
-    URI initiateTxn(Transaction transaction) {
+    URI initiateTxn(Transaction transaction, GatewayParams gatewayParams) {
         if (!isGatewayActive(transaction.getGateway()))
             throw new CustomException("INVALID_PAYMENT_GATEWAY", "Invalid or inactive payment gateway provided");
 
         Gateway gateway = getGateway(transaction.getGateway());
-        return gateway.generateRedirectURI(transaction);
+        return gateway.generateRedirectURI(transaction, gatewayParams);
     }
 
     /**

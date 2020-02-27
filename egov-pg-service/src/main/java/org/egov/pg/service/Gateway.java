@@ -20,7 +20,7 @@ public interface Gateway {
      * @param transaction for which payment gateway redirect URI is to be generated
      * @return redirect URI
      */
-    URI generateRedirectURI(Transaction transaction);
+    URI generateRedirectURI(Transaction transaction, GatewayParams gatewayParams);
 
     /**
      * Fetch the current status of the given transaction from the gateway

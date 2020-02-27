@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.config.AppProperties;
 import org.egov.pg.constants.PgConstants;
-import org.egov.pg.models.Receipt;
+import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.models.TransactionDump;
 import org.egov.pg.models.TransactionDumpRequest;
@@ -70,6 +70,7 @@ public class TransactionService {
     public Transaction initiateTransaction(TransactionRequest transactionRequest) throws Exception {
         validator.validateCreateTxn(transactionRequest);
 
+        GatewayParams gatewayParams = null;
         // Enrich transaction by generating txnid, audit details, default status
         enrichmentService.enrichCreateTransaction(transactionRequest);
 
@@ -81,12 +82,11 @@ public class TransactionService {
                 .auditDetails(transaction.getAuditDetails())
                 .build();
 
-        if(validator.skipGateway(transaction)){
+        if (validator.skipGateway(transaction)) {
             transaction.setTxnStatus(Transaction.TxnStatusEnum.SUCCESS);
             generateReceipt(requestInfo, transaction);
-        }
-        else{
-            URI uri = gatewayService.initiateTxn(transaction);
+        } else {
+            URI uri = gatewayService.initiateTxn(transaction, gatewayParams);
             transaction.setRedirectUrl(uri.toString());
 
             dump.setTxnRequest(uri.toString());
@@ -142,10 +142,10 @@ public class TransactionService {
 
         Transaction newTxn = null;
 
-        if(validator.skipGateway(currentTxnStatus)) {
+        if (validator.skipGateway(currentTxnStatus)) {
             newTxn = currentTxnStatus;
 
-        } else{
+        } else {
             newTxn = gatewayService.getLiveStatus(currentTxnStatus, requestParams);
 
             // Enrich the new transaction status before persisting
@@ -171,8 +171,8 @@ public class TransactionService {
 
     private void generateReceipt(RequestInfo requestInfo, Transaction transaction) {
         try {
-         //   List<Receipt> receipts = collectionService.generateReceipt(requestInfo, transaction);
-         //   transaction.setReceipt(receipts.get(0).getBill().get(0).getBillDetails().get(0).getReceiptNumber());
+            //   List<Receipt> receipts = collectionService.generateReceipt(requestInfo, transaction);
+            //   transaction.setReceipt(receipts.get(0).getBill().get(0).getBillDetails().get(0).getReceiptNumber());
             transaction.setReceipt("1");
         } catch (CustomException | ServiceCallException e) {
             log.error("Unable to generate receipt ", e);
