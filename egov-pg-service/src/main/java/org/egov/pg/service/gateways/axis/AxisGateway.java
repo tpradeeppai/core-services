@@ -89,8 +89,8 @@ public class AxisGateway implements Gateway {
     public URI generateRedirectURI(Transaction transaction, RequestInfo requestInfo) throws Exception {
 
         GatewayParams metaData =  gatewayMetadata.getGatewayMetadata(transaction, requestInfo);
-
-        BANK_ACCOUNT_NUMBER = (String) metaData.get("accountNumber");
+        Map bankAccountNumber = (Map)metaData.getMetaData().get(GATEWAY_NAME);
+        BANK_ACCOUNT_NUMBER = (String) bankAccountNumber.get("accountNumber");
 
         Map<String, String> fields = new HashMap<>();
         fields.put("vpc_Version", VPC_VERSION);

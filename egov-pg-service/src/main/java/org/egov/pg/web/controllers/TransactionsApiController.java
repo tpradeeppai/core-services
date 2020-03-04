@@ -3,6 +3,7 @@ package org.egov.pg.web.controllers;
 
 import lombok.extern.slf4j.Slf4j;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.repository.GatewayMetadata;
 import org.egov.pg.service.GatewayService;
@@ -117,5 +118,19 @@ public class TransactionsApiController {
         GatewayResponse response = new GatewayResponse(responseInfo, listOfGateway);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+   /* @RequestMapping(value = "/gateway/v1/_getmeta", method = RequestMethod.POST)
+    public ResponseEntity<Map> getmeta(@Valid @RequestBody TransactionRequest transactionRequest) throws Exception {
+        Transaction transaction = transactionRequest.getTransaction();
+        RequestInfo requestInfo = transactionRequest.getRequestInfo();
+        ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestInfo(transactionRequest
+                .getRequestInfo(), true);
+        String tenantId = transaction.getTenantId();
+        GatewayParams metaData =  gatewayMetadata.getGatewayMetadata(transaction, requestInfo);
+
+        // LinkedList listOfGateway = gatewayMetadata.listOfGateways(requestInfo, tenantId);
+        //GatewayResponse response = new GatewayResponse(responseInfo, metaData);
+        return new ResponseEntity<>((Map)metaData.getMetaData().get("AXIS"), HttpStatus.OK);
+    }*/
 
 }
