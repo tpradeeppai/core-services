@@ -29,11 +29,12 @@ public class GatewayMetadata {
     public static final String GATEWAY_ENABLED = "enabled";
     private AppProperties appProperties;
     private RestTemplate restTemplate;
-
+    private GatewayParams gatewayParams;
     @Autowired
-    public GatewayMetadata(AppProperties appProperties, RestTemplate restTemplate) {
+    public GatewayMetadata(AppProperties appProperties, RestTemplate restTemplate, GatewayParams gatewayParams) {
         this.appProperties = appProperties;
         this.restTemplate = restTemplate;
+        this.gatewayParams = gatewayParams;
     }
 
     public GatewayParams getGatewayMetadata(Transaction transaction, RequestInfo requestInfo) throws Exception {
@@ -46,11 +47,8 @@ public class GatewayMetadata {
         }
 
         Map metaData = metaData(requestInfo, gateway, tenantId, module);
-        GatewayParams gatewayParams = new GatewayParams();
         gatewayParams.setMetaData(metaData);
-
         return gatewayParams;
-
     }
 
     private MdmsCriteriaReq getMDMSRequest(RequestInfo requestInfo, String tenantId) {
