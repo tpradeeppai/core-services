@@ -22,7 +22,6 @@ public class GatewayParams {
         if (metaData.containsKey(key)) {
             return metaData.get(key);
         }
-        //TODO
-        throw new Exception ("TODO: Update this");
+        throw new Exception ("Given " + key + " has no value in MDMS");
     }
 }

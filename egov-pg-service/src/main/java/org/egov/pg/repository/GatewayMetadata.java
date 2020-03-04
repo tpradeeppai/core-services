@@ -36,8 +36,23 @@ public class GatewayMetadata {
         this.restTemplate = restTemplate;
     }
 
-    public GatewayParams getGatewayMetadata(RequestInfo requestInfo, TransactionRequest transactionRequest)
-    {
+    public GatewayParams getGatewayMetadata(TransactionRequest transactionRequest) throws Exception {
+
+        Transaction transaction = transactionRequest.getTransaction();
+        RequestInfo requestInfo = transactionRequest.getRequestInfo();
+
+        String gateway = transaction.getGateway();
+        String tenantId = transaction.getTenantId();
+        String module = transaction.getModule();
+        if (gateway == null || tenantId == null || module == null) {
+            throw new CustomException("TRANSACTION_DETAIL_MISSING", "gateway or tenantId or module is missing");
+        }
+
+        Map metaData = metaData(requestInfo, gateway, tenantId, module);
+        GatewayParams gatewayParams = new GatewayParams();
+        gatewayParams.setMetaData(metaData);
+
+        return gatewayParams;
 
     }
 

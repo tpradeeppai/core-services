@@ -48,9 +48,6 @@ public class EnrichmentService {
             throw new CustomException("TRANSACTION_DETAIL_MISSING", "gateway or tenantId or module is missing");
         }
 
-        //Set metdata
-        // transaction.setMetaData(metaData);
-
         // Generate ID from ID Gen service and assign to txn object
         String txnId = idGenService.generateTxnId(transactionRequest);
         transaction.setTxnId(txnId);

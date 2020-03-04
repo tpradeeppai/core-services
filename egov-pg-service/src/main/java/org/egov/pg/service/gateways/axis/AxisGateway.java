@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
+import org.egov.pg.models.TransactionRequest;
 import org.egov.pg.repository.*;
 import org.egov.pg.service.*;
 import org.egov.pg.utils.Utils;
@@ -83,15 +84,12 @@ public class AxisGateway implements Gateway {
     }
 
     @Override
-    public URI generateRedirectURI(Transaction transaction) {
+    public URI generateRedirectURI(TransactionRequest transactionRequest) throws Exception {
 
-        GatewayMetadata gm;
-        gm.getGatewayMetadata(transaction);
-        if(gatewayParams != null){
-            metaData = gatewayParams.getMetaData();
-        }else{
-            throw new CustomException("METADATA_MISSING_ERROR","Metadata is required for this gateway");
-        }
+        Transaction transaction = transactionRequest.getTransaction();
+
+        GatewayMetadata gm = null;
+        GatewayParams metaData =  gm.getGatewayMetadata(transactionRequest);
 
         BANK_ACCOUNT_NUMBER = (String) metaData.get("accountNumber");
 
