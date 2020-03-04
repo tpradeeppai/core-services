@@ -6,6 +6,7 @@ import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.service.Gateway;
 import org.egov.pg.utils.Utils;
+import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -83,8 +84,12 @@ public class AxisGateway implements Gateway {
     @Override
     public URI generateRedirectURI(Transaction transaction, GatewayParams gatewayParams) {
 
-
-        Map metaData = gatewayParams.getMetaData();
+        Map metaData = new HashMap();
+        if(gatewayParams != null){
+            metaData = gatewayParams.getMetaData();
+        }else{
+            throw new CustomException("METADATA_MISSING_ERROR","Metadata is required for this gateway");
+        }
 
         BANK_ACCOUNT_NUMBER = (String) metaData.get("accountNumber");
 
