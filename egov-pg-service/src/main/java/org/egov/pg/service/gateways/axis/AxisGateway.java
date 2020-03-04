@@ -57,7 +57,7 @@ public class AxisGateway implements Gateway {
     private final boolean ACTIVE;
     private String BANK_ACCOUNT_NUMBER;
     private ObjectMapper objectMapper;
-
+    public GatewayMetadata gatewayMetadata;
     /**
      * Initialize by populating all required config parameters
      *
@@ -65,9 +65,10 @@ public class AxisGateway implements Gateway {
      * @param environment  containing all required config parameters
      */
     @Autowired
-    public AxisGateway(RestTemplate restTemplate, Environment environment, ObjectMapper objectMapper) {
+    public AxisGateway(RestTemplate restTemplate, Environment environment, ObjectMapper objectMapper, GatewayMetadata gatewayMetadata) {
         this.restTemplate = restTemplate;
         this.objectMapper = objectMapper;
+        this.gatewayMetadata = gatewayMetadata;
 
         ACTIVE = Boolean.valueOf(environment.getRequiredProperty("axis.active"));
         CURRENCY = environment.getRequiredProperty("axis.currency");
@@ -87,8 +88,7 @@ public class AxisGateway implements Gateway {
     @Override
     public URI generateRedirectURI(Transaction transaction, RequestInfo requestInfo) throws Exception {
 
-        GatewayMetadata gm = null;
-        GatewayParams metaData =  gm.getGatewayMetadata(transaction, requestInfo);
+        GatewayParams metaData =  gatewayMetadata.getGatewayMetadata(transaction, requestInfo);
 
         BANK_ACCOUNT_NUMBER = (String) metaData.get("accountNumber");
 
