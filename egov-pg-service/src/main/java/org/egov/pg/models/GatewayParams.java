@@ -18,4 +18,11 @@ public class GatewayParams {
     @JsonIgnore
     private Map metaData;
 
+    public Object get(String key) throws Exception {
+        if (metaData.containsKey(key)) {
+            return metaData.get(key);
+        }
+        //TODO
+        throw new Exception ("TODO: Update this");
+    }
 }

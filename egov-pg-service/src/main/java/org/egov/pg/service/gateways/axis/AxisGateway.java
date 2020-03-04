@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
-import org.egov.pg.service.Gateway;
+import org.egov.pg.repository.*;
+import org.egov.pg.service.*;
 import org.egov.pg.utils.Utils;
 import org.egov.tracer.model.CustomException;
 import org.egov.tracer.model.ServiceCallException;
@@ -82,9 +83,10 @@ public class AxisGateway implements Gateway {
     }
 
     @Override
-    public URI generateRedirectURI(Transaction transaction, GatewayParams gatewayParams) {
+    public URI generateRedirectURI(Transaction transaction) {
 
-        Map metaData = new HashMap();
+        GatewayMetadata gm;
+        gm.getGatewayMetadata(transaction);
         if(gatewayParams != null){
             metaData = gatewayParams.getMetaData();
         }else{

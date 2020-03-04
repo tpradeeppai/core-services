@@ -9,7 +9,7 @@ import org.egov.pg.models.Transaction;
 import org.egov.pg.models.TransactionDump;
 import org.egov.pg.models.TransactionDumpRequest;
 import org.egov.pg.producer.Producer;
-import org.egov.pg.repository.TransactionRepository;
+import org.egov.pg.repository.*;
 import org.egov.pg.validator.TransactionValidator;
 import org.egov.pg.web.models.TransactionCriteria;
 import org.egov.pg.web.models.TransactionRequest;
@@ -38,6 +38,7 @@ public class TransactionService {
     private AppProperties appProperties;
     private TransactionRepository transactionRepository;
     private CollectionService collectionService;
+    private GatewayMetadata gatewayMetadata;
 
 
     @Autowired
@@ -45,7 +46,8 @@ public class TransactionService {
                        TransactionRepository
                                transactionRepository, CollectionService collectionService,
                        EnrichmentService enrichmentService,
-                       AppProperties appProperties) {
+                       AppProperties appProperties,
+                       GatewayMetadata gatewayMetadata) {
         this.validator = validator;
         this.gatewayService = gatewayService;
         this.producer = producer;
@@ -53,6 +55,7 @@ public class TransactionService {
         this.collectionService = collectionService;
         this.enrichmentService = enrichmentService;
         this.appProperties = appProperties;
+        this.gatewayMetadata = gatewayMetadata;
     }
 
     /**
@@ -70,7 +73,6 @@ public class TransactionService {
     public Transaction initiateTransaction(TransactionRequest transactionRequest) throws Exception {
         validator.validateCreateTxn(transactionRequest);
 
-        GatewayParams gatewayParams = null;
         // Enrich transaction by generating txnid, audit details, default status
         enrichmentService.enrichCreateTransaction(transactionRequest);
 
@@ -86,7 +88,7 @@ public class TransactionService {
             transaction.setTxnStatus(Transaction.TxnStatusEnum.SUCCESS);
             generateReceipt(requestInfo, transaction);
         } else {
-            URI uri = gatewayService.initiateTxn(transaction, gatewayParams);
+            URI uri = gatewayService.initiateTxn(transaction);
             transaction.setRedirectUrl(uri.toString());
 
             dump.setTxnRequest(uri.toString());

@@ -29,14 +29,11 @@ public class EnrichmentService {
 
     private IdGenService idGenService;
     private ObjectMapper objectMapper;
-    private GatewayMetadata gatewayMetadata;
 
     @Autowired
-    EnrichmentService(IdGenService idGenService, ObjectMapper objectMapper,
-                      GatewayMetadata gatewayMetadata) {
+    EnrichmentService(IdGenService idGenService, ObjectMapper objectMapper) {
         this.idGenService = idGenService;
         this.objectMapper = objectMapper;
-        this.gatewayMetadata = gatewayMetadata;
     }
 
     void enrichCreateTransaction(TransactionRequest transactionRequest) throws Exception {
@@ -52,9 +49,6 @@ public class EnrichmentService {
         }
 
         //Set metdata
-        Map metaData = gatewayMetadata.metaData(requestInfo, gateway, tenantId, module);
-        GatewayParams gatewayParams = new GatewayParams();
-        gatewayParams.setMetaData(metaData);
         // transaction.setMetaData(metaData);
 
         // Generate ID from ID Gen service and assign to txn object

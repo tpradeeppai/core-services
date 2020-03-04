@@ -7,6 +7,7 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.pg.config.AppProperties;
+import org.egov.pg.models.*;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -33,6 +34,11 @@ public class GatewayMetadata {
     public GatewayMetadata(AppProperties appProperties, RestTemplate restTemplate) {
         this.appProperties = appProperties;
         this.restTemplate = restTemplate;
+    }
+
+    public GatewayParams getGatewayMetadata(RequestInfo requestInfo, TransactionRequest transactionRequest)
+    {
+
     }
 
     private MdmsCriteriaReq getMDMSRequest(RequestInfo requestInfo, String tenantId) {
