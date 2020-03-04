@@ -3,8 +3,10 @@ package org.egov.pg.service.gateways.payu;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
+import org.egov.pg.models.TransactionRequest;
 import org.egov.pg.service.Gateway;
 import org.egov.pg.utils.Utils;
 import org.egov.tracer.model.CustomException;
@@ -63,7 +65,8 @@ public class PayuGateway implements Gateway {
     }
 
     @Override
-    public URI generateRedirectURI(Transaction transaction, GatewayParams gatewayParams) {
+    public URI generateRedirectURI(Transaction transaction, RequestInfo requestInfo) {
+
         String hashSequence = "key|txnid|amount|productinfo|firstname|email|||||||||||";
         hashSequence = hashSequence.concat(MERCHANT_SALT);
         hashSequence = hashSequence.replace("key", MERCHANT_KEY);

@@ -2,6 +2,7 @@ package org.egov.pg.service.gateways.axis;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.models.TransactionRequest;
@@ -84,12 +85,10 @@ public class AxisGateway implements Gateway {
     }
 
     @Override
-    public URI generateRedirectURI(TransactionRequest transactionRequest) throws Exception {
-
-        Transaction transaction = transactionRequest.getTransaction();
+    public URI generateRedirectURI(Transaction transaction, RequestInfo requestInfo) throws Exception {
 
         GatewayMetadata gm = null;
-        GatewayParams metaData =  gm.getGatewayMetadata(transactionRequest);
+        GatewayParams metaData =  gm.getGatewayMetadata(transaction, requestInfo);
 
         BANK_ACCOUNT_NUMBER = (String) metaData.get("accountNumber");
 

@@ -1,4 +1,6 @@
+/*
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.service.Gateway;
@@ -47,7 +49,7 @@ public class Test {
                 .user(user).build();
 
         Gateway gateway = new AxisGateway(restTemplate, environment, objectMapper);
-        URI redirectUri = gateway.generateRedirectURI(txn, gatewayParams);
+        URI redirectUri = gateway.generateRedirectURI(txn,);
         System.out.println(redirectUri.toString());
 
     }
@@ -168,3 +170,4 @@ public class Test {
         System.out.println(Utils.convertPaiseToRupee("10"));
     }
 }
+*/

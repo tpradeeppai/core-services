@@ -36,10 +36,7 @@ public class GatewayMetadata {
         this.restTemplate = restTemplate;
     }
 
-    public GatewayParams getGatewayMetadata(TransactionRequest transactionRequest) throws Exception {
-
-        Transaction transaction = transactionRequest.getTransaction();
-        RequestInfo requestInfo = transactionRequest.getRequestInfo();
+    public GatewayParams getGatewayMetadata(Transaction transaction, RequestInfo requestInfo) throws Exception {
 
         String gateway = transaction.getGateway();
         String tenantId = transaction.getTenantId();

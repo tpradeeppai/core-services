@@ -3,8 +3,10 @@ package org.egov.pg.service.gateways.phonepe;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
+import org.egov.pg.models.TransactionRequest;
 import org.egov.pg.service.Gateway;
 import org.egov.pg.utils.Utils;
 import org.egov.tracer.model.CustomException;
@@ -59,7 +61,8 @@ public class PhonepeGateway implements Gateway {
 
 
     @Override
-    public URI generateRedirectURI(Transaction transaction, GatewayParams gatewayParams) {
+    public URI generateRedirectURI(Transaction transaction, RequestInfo requestInfo) {
+
         Map<String, Object> map = new TreeMap<>();
         map.put("merchantId", MERCHANT_ID);
         map.put("transactionId", transaction.getTxnId());

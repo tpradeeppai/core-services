@@ -88,7 +88,7 @@ public class TransactionService {
             transaction.setTxnStatus(Transaction.TxnStatusEnum.SUCCESS);
             generateReceipt(requestInfo, transaction);
         } else {
-            URI uri = gatewayService.initiateTxn(transaction);
+            URI uri = gatewayService.initiateTxn(transaction, requestInfo);
             transaction.setRedirectUrl(uri.toString());
 
             dump.setTxnRequest(uri.toString());

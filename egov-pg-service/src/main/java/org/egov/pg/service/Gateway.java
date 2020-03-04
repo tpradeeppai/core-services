@@ -1,5 +1,6 @@
 package org.egov.pg.service;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.pg.models.GatewayParams;
 import org.egov.pg.models.Transaction;
 import org.egov.pg.models.TransactionRequest;
@@ -21,7 +22,7 @@ public interface Gateway {
      * @param transaction for which payment gateway redirect URI is to be generated
      * @return redirect URI
      */
-    URI generateRedirectURI(TransactionRequest transactionRequest) throws Exception;
+    URI generateRedirectURI(Transaction transaction, RequestInfo requestInfo) throws Exception;
 
     /**
      * Fetch the current status of the given transaction from the gateway
