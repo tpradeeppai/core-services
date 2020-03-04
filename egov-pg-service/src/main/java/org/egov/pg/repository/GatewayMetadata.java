@@ -47,7 +47,8 @@ public class GatewayMetadata {
         }
 
         Map metaData = metaData(requestInfo, gateway, tenantId, module);
-        gatewayParams.setMetaData(metaData);
+        Map gatewayParam = (Map)metaData.get(gateway);
+        gatewayParams.setMetaData(gatewayParam);
         return gatewayParams;
     }
 
