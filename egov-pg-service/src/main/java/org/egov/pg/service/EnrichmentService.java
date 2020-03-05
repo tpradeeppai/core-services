@@ -42,17 +42,10 @@ public class EnrichmentService {
         Transaction transaction = transactionRequest.getTransaction();
         RequestInfo requestInfo = transactionRequest.getRequestInfo();
 
-        String gateway = transaction.getGateway();
-        String tenantId = transaction.getTenantId();
-        String module = transaction.getModule();
-
-        if (gateway == null || tenantId == null || module == null) {
+        /*if (gateway == null || tenantId == null || module == null) {
             throw new CustomException("TRANSACTION_DETAIL_MISSING", "gateway or tenantId or module is missing");
-        }
-        if(gateway.equals("DEFAULT")){
-            String defaultGateway = gatewayMetadata.getDefaultGateway(requestInfo,gateway,tenantId,module);
-            transaction.setGateway(defaultGateway);
-        }
+        }*/
+
         // Generate ID from ID Gen service and assign to txn object
         String txnId = idGenService.generateTxnId(transactionRequest);
         transaction.setTxnId(txnId);

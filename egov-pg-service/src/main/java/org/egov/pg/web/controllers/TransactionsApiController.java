@@ -50,11 +50,20 @@ public class TransactionsApiController {
      */
     @RequestMapping(value = "/transaction/v1/_create", method = RequestMethod.POST)
     public ResponseEntity<TransactionCreateResponse> transactionsV1CreatePost(@Valid @RequestBody TransactionRequest transactionRequest) throws Exception {
+        Transaction transaction = transactionRequest.getTransaction();
+        RequestInfo requestInfo = transactionRequest.getRequestInfo();
 
-        Transaction transaction = transactionService.initiateTransaction(transactionRequest);
+        String gateway = transaction.getGateway();
+        String tenantId = transaction.getTenantId();
+        String module = transaction.getModule();
+        if(gateway.equals("DEFAULT")){
+            String defaultGateway = gatewayMetadata.getDefaultGateway(requestInfo,gateway,tenantId,module);
+            transaction.setGateway(defaultGateway);
+        }
+        Transaction transactionResponse = transactionService.initiateTransaction(transactionRequest);
         ResponseInfo responseInfo = ResponseInfoFactory.createResponseInfoFromRequestInfo(transactionRequest
                 .getRequestInfo(), true);
-        TransactionCreateResponse response = new TransactionCreateResponse(responseInfo, transaction);
+        TransactionCreateResponse response = new TransactionCreateResponse(responseInfo, transactionResponse);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
