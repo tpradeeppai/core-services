@@ -25,7 +25,7 @@ public class GatewayMetadata {
     public static final String MDMS_RESPONSE = "MdmsRes";
     public static final String GATEWAY_DETAILS = "serviceOverride";
     public static final String GATEWAY_NAME = "code";
-    public static final String GATEWAY_DEFAULT = "default";
+    public static final String GATEWAY_DEFAULT = "DEFAULT";
     public static final String GATEWAY_ENABLED = "enabled";
     private AppProperties appProperties;
     private RestTemplate restTemplate;
