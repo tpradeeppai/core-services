@@ -119,7 +119,7 @@ public class TransactionsApiController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-   /* @RequestMapping(value = "/gateway/v1/_getmeta", method = RequestMethod.POST)
+  /*  @RequestMapping(value = "/gateway/v1/_getmeta", method = RequestMethod.POST)
     public ResponseEntity<Map> getmeta(@Valid @RequestBody TransactionRequest transactionRequest) throws Exception {
         Transaction transaction = transactionRequest.getTransaction();
         RequestInfo requestInfo = transactionRequest.getRequestInfo();
@@ -127,10 +127,11 @@ public class TransactionsApiController {
                 .getRequestInfo(), true);
         String tenantId = transaction.getTenantId();
         GatewayParams metaData =  gatewayMetadata.getGatewayMetadata(transaction, requestInfo);
-
-        // LinkedList listOfGateway = gatewayMetadata.listOfGateways(requestInfo, tenantId);
+  //      String res = gatewayMetadata.getDefaultGateway(requestInfo,transaction.getGateway(),transaction.getTenantId(),transaction.getModule());
+   //      LinkedList listOfGateway = gatewayMetadata.listOfGateways(requestInfo, tenantId);
         //GatewayResponse response = new GatewayResponse(responseInfo, metaData);
-        return new ResponseEntity<>((Map)metaData.getMetaData().get("AXIS"), HttpStatus.OK);
+        return new ResponseEntity<>(metaData.getMetaData(), HttpStatus.OK);
+     //   return new ResponseEntity<>(res, HttpStatus.OK);
     }*/
 
 }

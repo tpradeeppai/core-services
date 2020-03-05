@@ -80,6 +80,31 @@ public class GatewayMetadata {
         return result;
     }
 
+    //Returns the default gateway which is enabled
+    public String  getDefaultGateway(RequestInfo requestInfo, String gateway, String tenantId, String module){
+        Map gatewayData = mDMSCall(requestInfo, tenantId);
+        String defaultGateway=null;
+        List gatewayDetails = (List) ((HashMap) ((HashMap) gatewayData.get(MDMS_RESPONSE))
+                .get(MDMS_PAYMENT_GATEWAY_MODULE)).get(MDMS_GATEWAY_MASTER);
+        try{
+            for (int i = 0; i < gatewayDetails.size(); i++) {
+
+                if (gateway.equals(GATEWAY_DEFAULT) && ((HashMap) gatewayDetails.get(i)).get("default").equals(true)
+                        && ((HashMap) gatewayDetails.get(i)).get("default").equals(true)){
+                    defaultGateway=(String) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_NAME);
+                    break;
+                }
+            }
+
+            }catch(Exception e){
+            throw new CustomException("GATEWAY_CONFIG_ERROR","Error fetching default gateway");
+        }
+        if(defaultGateway==null){
+            throw new CustomException("GATEWAY_CONFIG_ERROR","No default gateway found");
+        }
+        return  defaultGateway;
+    }
+
     //returns metData for gateway, tenant,module
     public Map metaData(RequestInfo requestInfo, String gateway, String tenantId, String module) throws Exception {
         Map gatewayData = mDMSCall(requestInfo, tenantId);
@@ -88,26 +113,13 @@ public class GatewayMetadata {
         Map result = new HashMap();
         try {
             for (int i = 0; i < gatewayDetails.size(); i++) {
-                //if default gateway is needed
-                if (gateway.equals(GATEWAY_DEFAULT) && ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DEFAULT).equals(true)
-                        && ((HashMap) gatewayDetails.get(i)).get(GATEWAY_ENABLED).equals(true)) {
+                 if (((HashMap) gatewayDetails.get(i)).get(GATEWAY_NAME).equals(gateway) && ((HashMap) gatewayDetails.get(i)).get(GATEWAY_ENABLED).equals(true)) {
                     if (!((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).isEmpty()) {
                         result.put(gateway, ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get("*"));
 
                         if (((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).containsKey(module)) {
-                            result.putAll(((HashMap) ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get(module)));
-                        }
-                    } else {
-                        result.put(gateway, null);
-                    }
-
-
-                } else if (((HashMap) gatewayDetails.get(i)).get(GATEWAY_NAME).equals(gateway) && ((HashMap) gatewayDetails.get(i)).get(GATEWAY_ENABLED).equals(true)) {
-                    if (!((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).isEmpty()) {
-                        result.put(gateway, ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get("*"));
-
-                        if (((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).containsKey(module)) {
-                            ((HashMap) result.get(gateway)).putAll(((HashMap) ((HashMap) ((HashMap) gatewayDetails.get(i)).get(GATEWAY_DETAILS)).get(module)));
+                            ((HashMap) result.get(gateway)).putAll(((HashMap) ((HashMap) ((HashMap) gatewayDetails.get(i)).
+                                    get(GATEWAY_DETAILS)).get(module)));
                         }
                     }
 

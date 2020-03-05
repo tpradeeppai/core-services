@@ -29,11 +29,13 @@ public class EnrichmentService {
 
     private IdGenService idGenService;
     private ObjectMapper objectMapper;
+    private GatewayMetadata gatewayMetadata;
 
     @Autowired
-    EnrichmentService(IdGenService idGenService, ObjectMapper objectMapper) {
+    EnrichmentService(IdGenService idGenService, ObjectMapper objectMapper, GatewayMetadata gatewayMetadata) {
         this.idGenService = idGenService;
         this.objectMapper = objectMapper;
+        this.gatewayMetadata= gatewayMetadata;
     }
 
     void enrichCreateTransaction(TransactionRequest transactionRequest) throws Exception {
@@ -47,7 +49,10 @@ public class EnrichmentService {
         if (gateway == null || tenantId == null || module == null) {
             throw new CustomException("TRANSACTION_DETAIL_MISSING", "gateway or tenantId or module is missing");
         }
-
+        if(gateway.equals("DEFAULT")){
+            String defaultGateway = gatewayMetadata.getDefaultGateway(requestInfo,gateway,tenantId,module);
+            transaction.setGateway(defaultGateway);
+        }
         // Generate ID from ID Gen service and assign to txn object
         String txnId = idGenService.generateTxnId(transactionRequest);
         transaction.setTxnId(txnId);
