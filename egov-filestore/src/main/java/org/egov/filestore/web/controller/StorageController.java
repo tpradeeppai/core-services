@@ -4,11 +4,15 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.annotation.PostConstruct;
+
+import org.apache.commons.io.FilenameUtils;
 import org.egov.filestore.domain.model.FileInfo;
 import org.egov.filestore.domain.service.StorageService;
 import org.egov.filestore.web.contract.File;
@@ -16,11 +20,14 @@ import org.egov.filestore.web.contract.FileStoreResponse;
 import org.egov.filestore.web.contract.GetFilesByTagResponse;
 import org.egov.filestore.web.contract.ResponseFactory;
 import org.egov.filestore.web.contract.StorageResponse;
+import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +39,19 @@ import org.springframework.web.multipart.MultipartFile;
 @Controller
 @RequestMapping("/v1/files")
 public class StorageController {
+	
+	private static List<String> DEFAULT_FORMATS = Arrays.asList("jpg","jpeg","png","pdf");
+	
+	@Value("#{${allowed.file.formats}}")
+	private List<String> allowedFileFormats;
+	
+	@PostConstruct
+	public void setDefaultFIleFormats() {
+		
+		if(CollectionUtils.isEmpty(allowedFileFormats)) {
+			allowedFileFormats = DEFAULT_FORMATS;
+		}
+	}
 
 	private StorageService storageService;
 	private ResponseFactory responseFactory;
@@ -88,6 +108,17 @@ public class StorageController {
 			@RequestParam(value = "module", required = true) String module,
 			@RequestParam(value = "tag", required = false) String tag) {
 		
+		List<String> formats = allowedFileFormats;
+		
+		for(MultipartFile file : files) {
+	
+			if (!formats.contains(FilenameUtils.getExtension(file.getOriginalFilename()))) {
+
+				throw new CustomException("EG_FILESTORE_INVALID_INPUT",
+						"Inalvid input provided for file, please upload any of the allowed formats : " + formats);
+			}
+		}
+
 		final List<String> fileStoreIds = storageService.save(files, module, tag, tenantId);
 		return getStorageResponse(fileStoreIds, tenantId);
 	}
