@@ -42,7 +42,7 @@ public class StorageController {
 	
 	private static List<String> DEFAULT_FORMATS = Arrays.asList("jpg","jpeg","png","pdf");
 	
-	@Value("#{${allowed.file.formats}}")
+	@Value("#{'${allowed.file.formats}'.split(',')}")
 	private List<String> allowedFileFormats;
 	
 	@PostConstruct
