@@ -115,7 +115,7 @@ public class StorageController {
 			if (!formats.contains(FilenameUtils.getExtension(file.getOriginalFilename()))) {
 
 				throw new CustomException("EG_FILESTORE_INVALID_INPUT",
-						"Inalvid input provided for file, please upload any of the allowed formats : " + formats);
+						"Invalid input provided for the file, please upload any of the allowed formats : " + formats);
 			}
 		}
 
