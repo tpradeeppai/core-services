@@ -7,7 +7,7 @@ let egovLocHost = envVariables.EGOV_LOCALISATION_HOST;
 let defaultLocale = envVariables.DEFAULT_LOCALISATION_LOCALE;
 let defaultTenant = envVariables.DEFAULT_LOCALISATION_TENANT;
 export const getTransformedLocale = label => {
-  return label.toUpperCase().replace(/[.:-\s\/]/g, "_");
+  return label;
 };
 
 /**
