@@ -378,6 +378,7 @@ app.post(
       }
     } catch (error) {
       logger.error(error.stack || error);
+      console.log("error---->"+error.stack);
       res.status(500);
       res.json({
         message: "some unknown error while creating: " + error.message
@@ -628,6 +629,8 @@ export const fillValues = (variableTovalueMap, formatconfig) => {
       .replace(/\]\[/g, "],[")
       .replace(/"\{/g, "{")
       .replace(/\}"/g, "}")
+      .replace(/\n/g, " ")
+      .replace(/\t/g, " ")
   );
   return output;
 };
