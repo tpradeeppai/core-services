@@ -309,20 +309,15 @@ app.post(
         error => {
           res.status(500);
           // doc creation error
-          res.json({
-            ResponseInfo: requestInfo,
-            message: "error in createPdfBinary " + error.message
-          });
+          res.json(customExecption("PDF_CREATION_ERROR","error in createPdfBinary " + error.message,res));
+
         }
       );
       //
     } catch (error) {
       logger.error(error.stack || error);
-      res.status(500);
-      res.json({
-        ResponseInfo: requestInfo,
-        message: "some unknown error while creating: " + error.message
-      });
+      res.status(400);
+      res.json(customExecption("INPUT_DATA_ERROR","some unknown error while creating: " + error.message,res));
     }
   })
 );
@@ -378,11 +373,8 @@ app.post(
       }
     } catch (error) {
       logger.error(error.stack || error);
-      console.log("error---->"+error.stack);
-      res.status(500);
-      res.json({
-        message: "some unknown error while creating: " + error.message
-      });
+      res.status(400);
+      res.json(customExecption("INPUT_DATA_ERROR","some unknown error while creating: " + error.message,res));
     }
   })
 );
@@ -402,10 +394,7 @@ app.post(
         (entityid == undefined || entityid.trim() == "")
       ) {
         res.status(400);
-        res.json({
-          ResponseInfo: requestInfo,
-          message: "jobid and entityid both can not be empty"
-        });
+        res.json(customExecption("MISSING_SEARCH_PARAMETER_ERROR","jobid and entityid both can not be empty",res));
       } else {
         if (jobid) {
           if (jobid.includes(",")) {
@@ -431,10 +420,7 @@ app.post(
     } catch (error) {
       logger.error(error.stack || error);
       res.status(500);
-      res.json({
-        ResponseInfo: requestInfo,
-        message: "some unknown error while searching: " + error.message
-      });
+      res.json(customExecption("SEARCH_ERROR","some unknown error while searching: " + error.message,res));
     }
   })
 );
@@ -619,21 +605,45 @@ export const fillValues = (variableTovalueMap, formatconfig) => {
   let input = JSON.stringify(formatconfig);
   //console.log(variableTovalueMap);
   //console.log(mustache.render(input, variableTovalueMap).replace(/""/g,"\"").replace(/\\/g,"").replace(/"\[/g,"\[").replace(/\]"/g,"\]").replace(/\]\[/g,"\],\[").replace(/"\{/g,"\{").replace(/\}"/g,"\}"));
+  mustache.escape = function(variableTovalueMap) {
+    var parsedData = JSON.stringify(variableTovalueMap)
+    return removeFirstAndLastQuotes(parsedData)
+  }
   let output = JSON.parse(
     mustache
       .render(input, variableTovalueMap)
-      .replace(/""/g, '"')
-      .replace(/\\/g, "")
-      .replace(/"\[/g, "[")
+      .replace(/"\[/g, "[")      
       .replace(/\]"/g, "]")
-      .replace(/\]\[/g, "],[")
-      .replace(/"\{/g, "{")
-      .replace(/\}"/g, "}")
-      .replace(/\n/g, " ")
-      .replace(/\t/g, " ")
   );
   return output;
 };
+
+function removeFirstAndLastQuotes(str){
+  var firstChar = str.charAt(0);
+  var lastChar = str[str.length -1];
+  //double quotes
+  if(firstChar && lastChar === String.fromCharCode(34)){
+    str = str.slice(1, -1);
+  }
+  //single quotes
+  if(firstChar && lastChar === String.fromCharCode(39)){
+    str = str.slice(1, -1);
+  }
+  return str;
+}
+
+function customExecption(errorKey,message,response){
+  return response.json({
+    ResponseInfo:null,
+   Errors:[{
+   code: errorKey,
+   message: message,
+   description: null,
+   params: null
+ }]
+});
+
+}
 
 /**
  * generateQRCodes-function to geneerate qrcodes
@@ -699,10 +709,8 @@ const validateRequest = (req, res, key, tenantId, requestInfo) => {
   }
   if (res && errorMessage !== "") {
     res.status(400);
-    res.json({
-      message: errorMessage,
-      ResponseInfo: requestInfo
-    });
+    res.json(customExecption("VALIDATION_ERROR",errorMessage,res));
+
     return false;
   } else {
     return true;
