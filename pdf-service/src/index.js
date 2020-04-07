@@ -356,6 +356,45 @@ app.post(
           formatconfig,
           dataconfig
         );
+        console.log("footer value is " , formatConfigByFile[0].footer);
+        let footerResponse = formatConfigByFile[0].footer;
+        let footerArray = footerResponse[0].columns;
+        
+        //isPageNoRequired should be send within the columns array or else will throw an error
+        if(footerArray && footerArray.length > 0) {
+          formatConfigByFile[0]["footer"] = function (currentPage, pageCount, pageSize) {
+            
+          //   return [
+          //     {
+          //         columns : [
+          //             { text: 'pageNo.' + currentPage},
+          //             {
+          //                 text : "hello",
+          //                 alignment : "right"
+          //             }
+          //         ]
+          //     }
+          // ];
+            for (let row = 0; row < footerArray.length; row++) {
+              console.log("columns iss...", footerArray[row]);
+  
+              if (footerArray[row].isPageNoRequired && footerArray[row].isPageNoRequired === true) {
+                  
+                footerArray[row].text = 'PageNo.' + currentPage.toString();
+                delete footerArray[row]["isPageNoRequired"];
+              }
+
+              if (footerArray[row].isRunDateRequired && footerArray[row].isRunDateRequired === true) {
+                footerArray[row].text = "Run Date." + currentDate();
+                delete footerArray[row]["isRunDateRequired"];
+              }
+            }
+            console.log("footer response is..", footerResponse[0].columns);
+            return footerResponse;
+          }
+        }
+        
+        console.log("footer is ", formatConfigByFile[0]["footer"]);
         const doc = printer.createPdfKitDocument(formatConfigByFile[0]);
         let fileNameAppend = "-" + new Date().getTime();
         let filename = key + "" + fileNameAppend + ".pdf";
@@ -385,6 +424,14 @@ app.post(
     }
   })
 );
+
+const currentDate = () => {
+  var date = new Date();
+  var formattedDate =
+    date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+
+    return formattedDate;
+};
 
 app.post(
   "/pdf-service/v1/_search",
