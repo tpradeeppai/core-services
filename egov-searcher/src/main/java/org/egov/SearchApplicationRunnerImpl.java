@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.extern.slf4j.Slf4j;
 import org.egov.search.model.SearchDefinition;
 import org.egov.search.model.SearchDefinitions;
 import org.slf4j.Logger;
@@ -26,6 +27,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 @Component
 @Order(1)
+@Slf4j
 public class SearchApplicationRunnerImpl implements ApplicationRunner {
 
 	@Autowired
@@ -36,7 +38,13 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
     
     @Value("${search.yaml.path}")
     private String yamllist;
-    
+
+    @Value("${recursive.read}")
+	public boolean recursiveRead;
+
+    @Value("${search.config.path}")
+	public String configPath;
+
     public static ConcurrentHashMap<String, SearchDefinition> searchDefinitionMap  = new ConcurrentHashMap<>();
 
 	
@@ -45,13 +53,49 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
     @Override
     public void run(final ApplicationArguments arg0) throws Exception {
     	try {
-				logger.info("Reading yaml files......");			
+				logger.info("Reading yaml files......");
+				if(recursiveRead==true){
+					readFolder(configPath);
+				}
+				log.info(" This are all the files " + yamllist);
 			    readFiles();			
 			}catch(Exception e){
 				logger.error("Exception while loading yaml files: ",e);
 			}
     }
-    
+
+	public void readFolder(String baseFolderPath) {
+		File folder = new File(baseFolderPath);
+		File[] listOfFiles = folder.listFiles();
+
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				log.info("File " + listOfFiles[i].getName());
+				File file = listOfFiles[i];
+				String name = file.getName();
+				String[] fileName = name.split("[.]");
+				if (fileName[fileName.length - 1].equals("yml") || fileName[fileName.length - 1].equals("yaml")) {
+					log.debug("Reading yml file....:- " + name);
+					try {
+						yamllist = yamllist + ","+"file:/"+ file.getAbsolutePath();
+					}catch (Exception ex) {
+						ex.printStackTrace();
+					}
+				} else {
+					log.info("file is not of a valid type please change and retry");
+					log.info("Note: file can either be .yml/.yaml");
+
+				}
+
+			} else if (listOfFiles[i].isDirectory()) {
+				log.info("Directory " + listOfFiles[i].getName());
+				readFolder(listOfFiles[i].getAbsolutePath());
+			}
+		}
+
+	}
+
+
 	public SearchApplicationRunnerImpl(ResourceLoader resourceLoader) {
     	this.resourceLoader = resourceLoader;
     }
