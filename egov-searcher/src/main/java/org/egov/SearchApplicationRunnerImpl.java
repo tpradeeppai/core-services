@@ -3,6 +3,7 @@ package org.egov;
 import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
@@ -42,9 +43,6 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
     @Value("${recursive.read}")
 	public boolean recursiveRead;
 
-    @Value("${search.config.path}")
-	public String configPath;
-
     public static ConcurrentHashMap<String, SearchDefinition> searchDefinitionMap  = new ConcurrentHashMap<>();
 
 	
@@ -54,17 +52,26 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
     public void run(final ApplicationArguments arg0) throws Exception {
     	try {
 				logger.info("Reading yaml files......");
-				if(recursiveRead==true){
-					readFolder(configPath);
-				}
-				log.info(" This are all the files " + yamllist);
-			    readFiles();			
+			    readFiles();
 			}catch(Exception e){
 				logger.error("Exception while loading yaml files: ",e);
 			}
     }
+	public List<String> updateList(List<String> listoffiles){
+	List<String> finalListofFiles = new ArrayList<String>();
+		for(int i=0;i<listoffiles.size();i++){
+		String[] fileName = listoffiles.get(i).split("[.]");
+		if(fileName[fileName.length - 1].equals("yml") || fileName[fileName.length - 1].equals("yaml")){
+			finalListofFiles.add(listoffiles.get(i));
+		}else{
+			readFolder(listoffiles.get(i), finalListofFiles);
+		}
+	}
+		return finalListofFiles;
 
-	public void readFolder(String baseFolderPath) {
+	}
+
+	public void readFolder(String baseFolderPath, List<String> fin) {
 		File folder = new File(baseFolderPath);
 		File[] listOfFiles = folder.listFiles();
 
@@ -77,7 +84,7 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
 				if (fileName[fileName.length - 1].equals("yml") || fileName[fileName.length - 1].equals("yaml")) {
 					log.debug("Reading yml file....:- " + name);
 					try {
-						yamllist = yamllist + ","+"file:/"+ file.getAbsolutePath();
+						fin.add(file.getAbsolutePath());
 					}catch (Exception ex) {
 						ex.printStackTrace();
 					}
@@ -89,7 +96,7 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
 
 			} else if (listOfFiles[i].isDirectory()) {
 				log.info("Directory " + listOfFiles[i].getName());
-				readFolder(listOfFiles[i].getAbsolutePath());
+				readFolder(listOfFiles[i].getAbsolutePath(),fin);
 			}
 		}
 
@@ -105,11 +112,19 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
     	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		SearchDefinitions searchDefinitions = null;
 		try{
-				List<String> ymlUrlS = Arrays.asList(yamllist.split(","));
-				if(0 == ymlUrlS.size()){
-					ymlUrlS.add(yamllist);
+				List<String> fileUrls = Arrays.asList(yamllist.split(","));
+				if(0 == fileUrls.size()){
+					fileUrls.add(yamllist);
 				}
-				for(String yamlLocation : ymlUrlS){
+				if(recursiveRead==true){
+					List<String> ymlUrlS = updateList(fileUrls);
+				}else{
+					List<String> ymlUrlS = fileUrls;
+				}
+				List<String> ymlUrlS = updateList(fileUrls);
+				log.info(" These are all the files " + ymlUrlS);
+
+			for(String yamlLocation : ymlUrlS){
 					if(yamlLocation.startsWith("https://") || yamlLocation.startsWith("http://")) {
 						logger.info("Reading....: "+yamlLocation);
 						URL yamlFile = new URL(yamlLocation);
