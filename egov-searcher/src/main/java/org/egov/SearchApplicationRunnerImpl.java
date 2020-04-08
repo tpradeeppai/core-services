@@ -58,44 +58,53 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
 			}
     }
 
-	
-	public List<String> resolveAllConfigFolders(List<String> listOfFiles, Boolean resolveFolderCheck){
+	//file types to be resolved have to be passed as comma separated types.
+	public List<String> resolveAllConfigFolders(List<String> listOfFiles, Boolean resolveFolderCheck, String fileTypesToResolve){
 	List<String> ymlUrlList = new ArrayList<String>();
+	String[] fileTypes = fileTypesToResolve.split("[,]");
+
 	if(resolveFolderCheck==false){
 		return listOfFiles;
 	}else{
 		for(int i=0;i<listOfFiles.size();i++){
 			String[] fileName = listOfFiles.get(i).split("[.]");
-			if(fileName[fileName.length - 1].equals("yml") || fileName[fileName.length - 1].equals("yaml")){
-				ymlUrlList.add(listOfFiles.get(i));
-			}else{
-				ymlUrlList.addAll(FolderIterator(listOfFiles.get(i)));
-			}
+				if(searchArray(fileName[fileName.length - 1], fileTypes)){
+					ymlUrlList.add(listOfFiles.get(i));
+
+				}else{
+					ymlUrlList.addAll(FolderIterator(listOfFiles.get(i),fileTypes));
+				}
+
 		}
 		return ymlUrlList;
 	}
-
 	}
 
-	public List<String> FolderIterator(String baseFolderPath) {
+	public Boolean searchArray(String exten,String[] fileTypes){
+    	if(exten==null)	return false;
+    	for(String extension: fileTypes){
+    		if(extension.equals(exten)){
+    			return true;
+			}
+		}
+    	return false;
+	}
+
+	public List<String> FolderIterator(String baseFolderPath, String[] fileTypes) {
 		File folder = new File(baseFolderPath);
 		File[] listOfFiles = folder.listFiles();
 		List<String> configFolderList = new ArrayList<String>();
 
 		for (int i = 0; i < listOfFiles.length; i++) {
-			if (listOfFiles[i].isFile()) {
-				log.info("File " + listOfFiles[i].getName());
-				File file = listOfFiles[i];
-				String name = file.getName();
-				String[] fileName = name.split("[.]");
-				if (fileName[fileName.length - 1].equals("yml") || fileName[fileName.length - 1].equals("yaml")) {
-					log.debug("Reading yml file....:- " + name);
-						configFolderList.add(file.getAbsolutePath());
-				}
-			} else if (listOfFiles[i].isDirectory()) {
-				log.info("Directory " + listOfFiles[i].getName());
-				FolderIterator(listOfFiles[i].getAbsolutePath());
+			log.info("File " + listOfFiles[i].getName());
+			File file = listOfFiles[i];
+			String name = file.getName();
+			String[] fileName = name.split("[.]");
+			if (searchArray(fileName[fileName.length - 1], fileTypes)) {
+				log.debug("Reading yml file....:- " + name);
+				configFolderList.add(file.getAbsolutePath());
 			}
+
 		}
 		return configFolderList;
 	}
@@ -104,7 +113,8 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
 	public SearchApplicationRunnerImpl(ResourceLoader resourceLoader) {
     	this.resourceLoader = resourceLoader;
     }
-       
+
+    // 2 file types yaml and yml have to be resolved
     public void readFiles(){
     	ConcurrentHashMap<String, SearchDefinition> map  = new ConcurrentHashMap<>();
     	ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
@@ -114,7 +124,8 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
 				if(0 == fileUrls.size()){
 					fileUrls.add(yamllist);
 				}
-				List<String> ymlUrlS = resolveAllConfigFolders(fileUrls, resolveConfigFolder);
+				String fileTypes = "yaml,yml";
+				List<String> ymlUrlS = resolveAllConfigFolders(fileUrls, resolveConfigFolder, fileTypes);
 				log.info(" These are all the files " + ymlUrlS);
 
 			for(String yamlLocation : ymlUrlS){
