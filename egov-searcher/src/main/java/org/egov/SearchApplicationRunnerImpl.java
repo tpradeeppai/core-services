@@ -40,8 +40,8 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
     @Value("${search.yaml.path}")
     private String yamllist;
 
-    @Value("${recursive.read}")
-	public boolean recursiveRead;
+    @Value("${folder.iterator}")
+	public boolean resolveConfigFolder;
 
     public static ConcurrentHashMap<String, SearchDefinition> searchDefinitionMap  = new ConcurrentHashMap<>();
 
@@ -57,23 +57,30 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
 				logger.error("Exception while loading yaml files: ",e);
 			}
     }
-	public List<String> updateList(List<String> listoffiles){
-	List<String> finalListofFiles = new ArrayList<String>();
-		for(int i=0;i<listoffiles.size();i++){
-		String[] fileName = listoffiles.get(i).split("[.]");
-		if(fileName[fileName.length - 1].equals("yml") || fileName[fileName.length - 1].equals("yaml")){
-			finalListofFiles.add(listoffiles.get(i));
-		}else{
-			readFolder(listoffiles.get(i), finalListofFiles);
+
+	
+	public List<String> resolveAllConfigFolders(List<String> listOfFiles, Boolean resolveFolderCheck){
+	List<String> ymlUrlList = new ArrayList<String>();
+	if(resolveFolderCheck==false){
+		return listOfFiles;
+	}else{
+		for(int i=0;i<listOfFiles.size();i++){
+			String[] fileName = listOfFiles.get(i).split("[.]");
+			if(fileName[fileName.length - 1].equals("yml") || fileName[fileName.length - 1].equals("yaml")){
+				ymlUrlList.add(listOfFiles.get(i));
+			}else{
+				ymlUrlList.addAll(FolderIterator(listOfFiles.get(i)));
+			}
 		}
-	}
-		return finalListofFiles;
-
+		return ymlUrlList;
 	}
 
-	public void readFolder(String baseFolderPath, List<String> fin) {
+	}
+
+	public List<String> FolderIterator(String baseFolderPath) {
 		File folder = new File(baseFolderPath);
 		File[] listOfFiles = folder.listFiles();
+		List<String> configFolderList = new ArrayList<String>();
 
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isFile()) {
@@ -83,23 +90,14 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
 				String[] fileName = name.split("[.]");
 				if (fileName[fileName.length - 1].equals("yml") || fileName[fileName.length - 1].equals("yaml")) {
 					log.debug("Reading yml file....:- " + name);
-					try {
-						fin.add(file.getAbsolutePath());
-					}catch (Exception ex) {
-						ex.printStackTrace();
-					}
-				} else {
-					log.info("file is not of a valid type please change and retry");
-					log.info("Note: file can either be .yml/.yaml");
-
+						configFolderList.add(file.getAbsolutePath());
 				}
-
 			} else if (listOfFiles[i].isDirectory()) {
 				log.info("Directory " + listOfFiles[i].getName());
-				readFolder(listOfFiles[i].getAbsolutePath(),fin);
+				FolderIterator(listOfFiles[i].getAbsolutePath());
 			}
 		}
-
+		return configFolderList;
 	}
 
 
@@ -116,12 +114,7 @@ public class SearchApplicationRunnerImpl implements ApplicationRunner {
 				if(0 == fileUrls.size()){
 					fileUrls.add(yamllist);
 				}
-				if(recursiveRead==true){
-					List<String> ymlUrlS = updateList(fileUrls);
-				}else{
-					List<String> ymlUrlS = fileUrls;
-				}
-				List<String> ymlUrlS = updateList(fileUrls);
+				List<String> ymlUrlS = resolveAllConfigFolders(fileUrls, resolveConfigFolder);
 				log.info(" These are all the files " + ymlUrlS);
 
 			for(String yamlLocation : ymlUrlS){
