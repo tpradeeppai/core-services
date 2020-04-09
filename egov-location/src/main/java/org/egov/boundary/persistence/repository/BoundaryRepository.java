@@ -40,10 +40,13 @@
 
 package org.egov.boundary.persistence.repository;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import net.minidev.json.JSONArray;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.egov.boundary.domain.model.Boundary;
 import org.egov.boundary.domain.model.BoundarySearchRequest;
 import org.egov.boundary.persistence.repository.querybuilder.BoundaryQueryBuilder;
@@ -60,8 +63,11 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.minidev.json.JSONArray;
 
 @Repository
 public class BoundaryRepository {
@@ -344,7 +350,7 @@ public class BoundaryRepository {
 		mapper.disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 		startTime = new Date().getTime();
 		responseJSONArray = mdmsRepository.getByCriteria(boundarySearchRequest.getTenantId(),
-				boundarySearchRequest.getHierarchyTypeName());
+				boundarySearchRequest.getHierarchyTypeName(), requestInfo);
 		endTime = new Date().getTime();
 		logger.info("TIME TAKEN for MDMS Search result = " + (endTime - startTime) + "ms");
 		List<TenantBoundary> tenantBoundary = null;
