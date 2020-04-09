@@ -17,11 +17,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 
 import javax.annotation.PostConstruct;
+import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SpringBootApplication
 @Slf4j
@@ -38,6 +36,43 @@ public class EgovPersistApplication {
         SpringApplication.run(EgovPersistApplication.class, args);
     }
 
+    //file types to be resolved have to be passed as comma separated types.
+    public List<String> resolveAllConfigFolders(List<String> listOfFiles, String fileTypesToResolve) {
+        List<String> fileList = new ArrayList<String>();
+        List<String> fileTypes = Arrays.asList(fileTypesToResolve.split("[,]"));
+
+        for (String listOfFile : listOfFiles) {
+            String[] fileName = listOfFile.split("[.]");
+            if (fileTypes.contains(fileName[fileName.length - 1])) {
+                fileList.add(listOfFile);
+            } else {
+                fileList.addAll(getFilesInFolder(listOfFile, fileTypes));
+            }
+
+        }
+        return fileList;
+    }
+
+
+    public List<String> getFilesInFolder(String baseFolderPath,List<String> fileTypes) {
+        File folder = new File(baseFolderPath);
+        File[] listOfFiles = folder.listFiles();
+        List<String> configFolderList = new ArrayList<String>();
+
+        for (int i = 0; i < listOfFiles.length; i++) {
+            log.info("File " + listOfFiles[i].getName());
+            File file = listOfFiles[i];
+            String name = file.getName();
+            String[] fileName = name.split("[.]");
+            if (fileTypes.contains(fileName[fileName.length - 1])) {
+                log.debug(" Resolving folder....:- " + name);
+                configFolderList.add(file.getAbsolutePath());
+            }
+
+        }
+        return configFolderList;
+    }
+
     @PostConstruct
     @Bean
     public TopicMap loadConfigs() {
@@ -49,7 +84,10 @@ public class EgovPersistApplication {
         log.info("LOADING CONFIGS: "+ configPaths);
         ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 
-        String[] yamlUrls = configPaths.split(",");
+        List<String> fileUrls = Arrays.asList(configPaths.split(","));
+        String fileTypes = "yaml,yml";
+        List<String> yamlUrls = resolveAllConfigFolders(fileUrls, fileTypes);
+        log.info(" These are all the files " + yamlUrls);
         for (String configPath : yamlUrls) {
             try {
                 log.info("Attempting to load config: "+configPath);
