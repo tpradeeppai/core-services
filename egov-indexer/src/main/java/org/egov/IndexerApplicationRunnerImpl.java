@@ -27,6 +27,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
 import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Component
 @Order(1)
 public class IndexerApplicationRunnerImpl implements ApplicationRunner {
@@ -57,16 +58,57 @@ public class IndexerApplicationRunnerImpl implements ApplicationRunner {
 		this.resourceLoader = resourceLoader;
 	}
 
+	//file types to be resolved have to be passed as comma separated types.
+	public List<String> resolveAllConfigFolders(List<String> listOfFiles, String fileTypesToResolve) {
+		List<String> fileList = new ArrayList<String>();
+		List<String> fileTypes = Arrays.asList(fileTypesToResolve.split("[,]"));
+
+		for (String listOfFile : listOfFiles) {
+			String[] fileName = listOfFile.split("[.]");
+			if (fileTypes.contains(fileName[fileName.length - 1])) {
+				fileList.add(listOfFile);
+			} else {
+				fileList.addAll(getFilesInFolder(listOfFile, fileTypes));
+			}
+
+		}
+		return fileList;
+	}
+
+	public List<String> getFilesInFolder(String baseFolderPath,List<String> fileTypes) {
+		File folder = new File(baseFolderPath);
+		File[] listOfFiles = folder.listFiles();
+		List<String> configFolderList = new ArrayList<String>();
+
+		for (int i = 0; i < listOfFiles.length; i++) {
+			log.info("File " + listOfFiles[i].getName());
+			File file = listOfFiles[i];
+			String name = file.getName();
+			String[] fileName = name.split("[.]");
+			if (fileTypes.contains(fileName[fileName.length - 1])) {
+				log.debug(" Resolving folder....:- " + name);
+				configFolderList.add(file.getAbsolutePath());
+			}
+
+		}
+		return configFolderList;
+	}
+
+
 	public void readFiles() {
 		ConcurrentHashMap<String, Mapping> mappingsMap = new ConcurrentHashMap<>();
 		ConcurrentHashMap<String, List<String>> topicsMap = new ConcurrentHashMap<>();
 		ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
 		Services service = null;
 		try {
-			List<String> ymlUrlS = Arrays.asList(yamllist.split(","));
-			if (0 == ymlUrlS.size()) {
-				ymlUrlS.add(yamllist);
+			List<String> fileUrls = Arrays.asList(yamllist.split(","));
+			if (0 == fileUrls.size()) {
+				fileUrls.add(yamllist);
 			}
+			String fileTypes = "yaml,yml";
+			List<String> ymlUrlS = resolveAllConfigFolders(fileUrls, fileTypes);
+			log.info(" These are all the files " + ymlUrlS);
+
 			for (String yamlLocation : ymlUrlS) {
 				if (yamlLocation.startsWith("https://") || yamlLocation.startsWith("http://")) {
 					logger.info("Reading....: " + yamlLocation);
