@@ -1,5 +1,6 @@
 package org.egov.wf.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.wf.config.WorkflowConfig;
 import org.egov.wf.repository.BusinessServiceRepository;
@@ -33,12 +34,11 @@ public class WorkflowService {
 
     private BusinessServiceRepository businessServiceRepository;
 
+    private ObjectMapper mapper;
+
 
     @Autowired
-    public WorkflowService(WorkflowConfig config, TransitionService transitionService,
-                           EnrichmentService enrichmentService, WorkflowValidator workflowValidator,
-                           StatusUpdateService statusUpdateService, WorKflowRepository workflowRepository,
-                           WorkflowUtil util,BusinessServiceRepository businessServiceRepository) {
+    public WorkflowService(WorkflowConfig config, TransitionService transitionService, EnrichmentService enrichmentService, WorkflowValidator workflowValidator, StatusUpdateService statusUpdateService, WorKflowRepository workflowRepository, WorkflowUtil util, BusinessServiceRepository businessServiceRepository, ObjectMapper mapper) {
         this.config = config;
         this.transitionService = transitionService;
         this.enrichmentService = enrichmentService;
@@ -47,7 +47,10 @@ public class WorkflowService {
         this.workflowRepository = workflowRepository;
         this.util = util;
         this.businessServiceRepository = businessServiceRepository;
+        this.mapper = mapper;
     }
+
+
 
 
     /**
@@ -80,7 +83,31 @@ public class WorkflowService {
         if(CollectionUtils.isEmpty(processInstances))
             return processInstances;
         enrichmentService.enrichUsersFromSearch(requestInfo,processInstances);
+
+            processInstances.forEach(processInstance -> {
+                if(processInstance.getBusinessId().equalsIgnoreCase("PB-BP-2020-04-08-002008")){
+                    try{
+                    System.out.println("processInstance: "+mapper.writeValueAsString(processInstance));}
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+
+
+
         List<ProcessStateAndAction> processStateAndActions = enrichmentService.enrichNextActionForSearch(requestInfo,processInstances);
+
+        processInstances.forEach(processInstance -> {
+            if(processInstance.getBusinessId().equalsIgnoreCase("PB-BP-2020-04-08-002008")){
+                try{
+                    System.out.println("processInstance after next action enrichment: "+mapper.writeValueAsString(processInstance));}
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        });
     //    workflowValidator.validateSearch(requestInfo,processStateAndActions);
         enrichmentService.enrichAndUpdateSlaForSearch(processInstances);
         return processInstances;

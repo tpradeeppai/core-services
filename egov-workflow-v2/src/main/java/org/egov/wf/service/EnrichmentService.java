@@ -317,6 +317,12 @@ public class EnrichmentService {
             processInstance.setBusinesssServiceSla(businessServiceSlaInDb-timeSinceLastAction);
             if(stateSlaInDB!=null)
                 processInstance.setStateSla(stateSlaInDB-timeSinceLastAction);
+
+
+            if(processInstance.getBusinessId().equalsIgnoreCase("PB-BP-2020-04-08-002008")){
+                System.out.println("businessServiceSlaInDb: "+processInstance.getBusinesssServiceSla());
+                System.out.println("timeSinceLastAction: "+timeSinceLastAction + "lastModifiedTime: "+processInstance.getAuditDetails().getLastModifiedTime());
+            }
         });
     }
 
