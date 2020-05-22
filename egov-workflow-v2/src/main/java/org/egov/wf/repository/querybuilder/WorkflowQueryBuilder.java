@@ -91,6 +91,12 @@ public class WorkflowQueryBuilder {
             builder.append(" and pi.businessId IN (").append(createQuery(businessIds)).append(")");
             addToPreparedStatement(preparedStmtList,businessIds);
         }
+        
+        List<String> statuses = criteria.getStatus();
+        if(!CollectionUtils.isEmpty(statuses)) {
+            builder.append(" and CONCAT  (pi.tenantid,':',pi.status) IN (").append(createQuery(statuses)).append(")");
+            addToPreparedStatement(preparedStmtList,statuses);
+        }
 
         String query = addPaginationWrapper(builder.toString(),preparedStmtList,criteria);
         query = query + ORDERBY_CREATEDTIME;
