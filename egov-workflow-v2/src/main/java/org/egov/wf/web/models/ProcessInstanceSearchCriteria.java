@@ -39,6 +39,9 @@ public class ProcessInstanceSearchCriteria {
 
     @JsonProperty("limit")
     private Integer limit;
+    
+    @JsonProperty("businessServices")
+    private List<String> businessServices;
 
 
     public Boolean isNull(){
