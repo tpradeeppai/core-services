@@ -94,7 +94,7 @@ public class WorkflowQueryBuilder {
         
         List<String> statuses = criteria.getStatus();
         if(!CollectionUtils.isEmpty(statuses)) {
-            builder.append(" and CONCAT  (pi.tenantid,':',pi.status) IN (").append(createQuery(statuses)).append(")");
+            builder.append(" and pi.status IN (").append(createQuery(statuses)).append(")");
             addToPreparedStatement(preparedStmtList,statuses);
         }
         
